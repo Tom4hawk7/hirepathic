@@ -1,4 +1,5 @@
 type CandidateResultCardProps = {
+    candidateId: number;
     name: string;
     education: string;
     experience: string;
@@ -7,6 +8,7 @@ type CandidateResultCardProps = {
   };
   
   export default function CandidateResultCard({
+    candidateId,
     name,
     education,
     experience,
@@ -21,7 +23,10 @@ type CandidateResultCardProps = {
           photo
         </div>
   
-        <div className="flex flex-1 items-center justify-between rounded-3xl border border-slate-300 bg-white px-8 py-5 shadow-sm transition hover:border-blue-300 hover:shadow-md">
+        <a
+          href={`/candidates/${candidateId}`}
+          className="flex flex-1 items-center justify-between rounded-3xl border border-slate-300 bg-white px-8 py-5 shadow-sm transition hover:border-blue-300 hover:shadow-md"
+        >
           <div className="text-center">
             <h2 className="text-xl font-bold text-slate-900">{name}</h2>
             <p className="mt-1 text-slate-600">{education}</p>
@@ -43,7 +48,7 @@ type CandidateResultCardProps = {
             <p className="text-sm font-semibold text-slate-500">Match</p>
             <p className="text-2xl font-bold text-blue-600">{matchScore}%</p>
           </div>
-        </div>
+        </a>
       </article>
     );
   }

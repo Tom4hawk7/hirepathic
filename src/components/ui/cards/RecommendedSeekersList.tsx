@@ -161,6 +161,7 @@ export default function RecommendedSeekersList({
         {visibleCandidates.map((candidate) => (
           <CandidateResultCard
             key={candidate.id}
+            candidateId={candidate.id}
             name={candidate.name}
             education={candidate.education}
             experience={candidate.experience}

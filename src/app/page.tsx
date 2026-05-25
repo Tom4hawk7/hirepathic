@@ -40,7 +40,7 @@ export default function Home() {
           </a>
 
           <a
-            href="/register/seeker"
+            href="/login"
             className="mt-4 block text-sm font-medium text-slate-600 underline hover:text-slate-900"
           >
             Already a user? Click Here!
