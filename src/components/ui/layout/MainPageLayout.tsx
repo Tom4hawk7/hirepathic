@@ -23,7 +23,7 @@ export default function MainPageLayout({
       <header className="border-b border-slate-200 bg-white/90 px-8 py-5 shadow-sm backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center gap-4">
           <a
-            href="/"
+            href="/home?role=seeker"
             className="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-700"
           >
             Home
