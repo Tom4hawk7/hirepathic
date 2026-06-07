@@ -23,11 +23,11 @@ export default function LoginForm() {
 
       <form className="mx-auto max-w-4xl space-y-6">
         <FormRow label="Email">
-          <FormInput type="email" placeholder="Enter your email" />
+          <FormInput type="email" name="password" placeholder="Enter your email" />
         </FormRow>
 
         <FormRow label="Password">
-          <FormInput type="password" placeholder="Enter your password" />
+          <FormInput type="password" name="password" placeholder="Enter your password" />
         </FormRow>
 
         <div className="grid grid-cols-[280px_1fr] items-center gap-8">
@@ -36,12 +36,11 @@ export default function LoginForm() {
           </label>
 
           <select
-            value={accountType}
-            onChange={(event) => setAccountType(event.target.value)}
+            name="role"
             className="h-12 rounded-2xl border border-slate-300 bg-slate-50 px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           >
-            <option value="seeker">Seeker</option>
-            <option value="employer">Employer</option>
+            <option value="SEEKER">Seeker</option>
+            <option value="EMPLOYER">Employer</option>
           </select>
         </div>
 
@@ -55,17 +54,10 @@ export default function LoginForm() {
 
           <div className="mt-5 flex justify-center gap-6 text-sm font-medium">
             <a
-              href="/register/seeker"
+              href="/"
               className="text-slate-600 underline hover:text-slate-900"
             >
-              Create seeker account
-            </a>
-
-            <a
-              href="/register/employer"
-              className="text-slate-600 underline hover:text-slate-900"
-            >
-              Create employer account
+              Create an account
             </a>
           </div>
         </div>
