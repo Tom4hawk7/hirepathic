@@ -5,7 +5,7 @@ import LoginForm from "@/components/ui/forms/LoginForm";
 import FormRow from "@/components/ui/forms/FormRow";
 import FormInput from "@/components/ui/forms/FormInput";
 
-export default function LoginPage() {
+export default async function LoginPage() {
   return (
     <PopupPageLayout title="Login">
           

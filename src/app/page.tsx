@@ -5,7 +5,7 @@ import FormRow from "@/components/ui/forms/FormRow";
 import FormInput from "@/components/ui/forms/FormInput";
 import { registerSeeker } from "./actions";
 
-export default function Home() {
+export default async function Home() {
   return (
     <PopupPageLayout title="Create Account">
       <form className="mx-auto mt-2 max-w-4xl space-y-6" action={registerSeeker}>
