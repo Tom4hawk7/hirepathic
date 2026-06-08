@@ -73,12 +73,7 @@ export default async function EmployerJobListingPage() {
               </FormRow>
       
               <div className="pt-8 text-center">
-                <a
-                  href="/candidates"
-                  className="mx-auto inline-block rounded-2xl bg-indigo-600 px-12 py-4 text-xl font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-                >
-                  Post Listing
-                </a>
+                <input type="submit" value="Post Listing" className="mx-auto inline-block rounded-2xl bg-indigo-600 px-12 py-4 text-xl font-semibold text-white shadow-sm transition hover:bg-indigo-700" />
               </div>
             </form>
           </>

@@ -46,12 +46,7 @@ export default async function SeekerEducationPage() {
               </FormRow>
       
               <div className="pt-8 text-center">
-                <a
-                  href="/jobs"
-                  className="mx-auto inline-block rounded-2xl bg-blue-600 px-10 py-4 text-xl font-semibold text-white shadow-sm transition hover:bg-blue-700"
-                >
-                  Finish Account Setup
-                </a>
+                <input type="submit" value="Finish Account Setup" className="mx-auto inline-block rounded-2xl bg-blue-600 px-10 py-4 text-xl font-semibold text-white shadow-sm transition hover:bg-blue-700" />
               </div>
             </form>
           </>

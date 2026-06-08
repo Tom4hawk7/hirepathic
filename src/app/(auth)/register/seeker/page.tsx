@@ -58,12 +58,7 @@ export default async function SeekerRegisterPage() {
               </FormRow>
       
               <div className="pt-8 text-center">
-                <a
-                  href="/jobs"
-                  className="mx-auto inline-block rounded-2xl bg-blue-600 px-10 py-4 text-xl font-semibold text-white shadow-sm transition hover:bg-blue-700"
-                >
-                  Continue to education
-                </a>
+                <input type="submit" value="Continue to education" className="mx-auto inline-block rounded-2xl bg-blue-600 px-10 py-4 text-xl font-semibold text-white shadow-sm transition hover:bg-blue-700"  />
               </div>
             </form>
           </>

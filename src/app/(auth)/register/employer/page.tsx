@@ -53,12 +53,10 @@ export default async function EmployerRegisterPage() {
               </div>
       
               <div className="pt-8 text-center">
-                <a
-                  href="/register/employer/jobpost"
+                <input type="submit" 
                   className="mx-auto inline-block rounded-2xl bg-indigo-600 px-10 py-4 text-xl font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-                >
-                  Finish Employer Setup
-                </a>
+                  value="Finishe Employer Setup"
+                />
               </div>
             </form>
           </>

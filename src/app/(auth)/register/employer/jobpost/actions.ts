@@ -57,5 +57,6 @@ export async function createJob (formData: FormData) {
         }
     })
 
-    redirect(ROUTES.dashboard.employer);
+    redirect("/home")
+    // redirect(ROUTES.dashboard.employer);
 }

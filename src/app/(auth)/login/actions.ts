@@ -31,12 +31,13 @@ export async function authenticateUser(formData: FormData) {
         path: "/",
     });
 
+    redirect("/home")
 
-    if (user.role == "EMPLOYER") {
-        redirect(ROUTES.dashboard.employer);
-    } else {
-        redirect(ROUTES.dashboard.seeker);
-    }
+    // if (user.role == "EMPLOYER") {
+    //     redirect("/");
+    // } else {
+    //     redirect(ROUTES.dashboard.seeker);
+    // }
 
 
 }
