@@ -1,4 +1,4 @@
-"use server";
+"use server"
 
 import PopupPageLayout from "@/components/ui/layout/PopupPageLayout";
 import SeekerSetupForm from "@/components/ui/forms/SeekerSetupForm";

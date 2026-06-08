@@ -1,8 +1,10 @@
+"use server"
+
 import PopupPageLayout from "@/components/ui/layout/PopupPageLayout";
 import FormInput from "@/components/ui/forms/FormInput";
 import FormRow from "@/components/ui/forms/FormRow";
 
-export default function SeekerEducationPage() {
+export default async function SeekerEducationPage() {
   return (
     <PopupPageLayout title="add account details / account setup">
       <>
