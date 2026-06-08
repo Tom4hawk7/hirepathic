@@ -14,19 +14,18 @@ model candidate {
   years_of_experience Int?
   preferred_work_mode work_mode?
   preferred_location  String?
-  user_id             Int
+  user_id             Int               @unique
   user                user              @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "fk_user_candidate")
+  skills              candidate_skill[]
   education           education[]
   work_experience     work_experience[]
-  skills              candidate_skill[]
 }
 
 model candidate_skill {
-  candidate_id Int      
+  candidate_id Int
   skill_id     Int
-  
-  candidates candidate @relation(fields: [candidate_id], references: [id], onDelete: Cascade, map: "fk_candidate_skill_candidate")
-  skills skill @relation(fields: [skill_id], references: [id], onDelete: Cascade, map: "fk_candidate_skill_skill")
+  candidates   candidate @relation(fields: [candidate_id], references: [id], onDelete: Cascade, map: "fk_candidate_skill_candidate")
+  skills       skill     @relation(fields: [skill_id], references: [id], onDelete: Cascade, map: "fk_candidate_skill_skill")
 
   @@id([candidate_id, skill_id])
   @@index([candidate_id])
@@ -78,10 +77,10 @@ model job {
 }
 
 model skill {
-  id              Int               @id @default(autoincrement())
-  name            String?           @unique
+  id         Int               @id @default(autoincrement())
+  name       String?           @unique
   candidates candidate_skill[]
-  job_skills      job_skill[]
+  job_skills job_skill[]
 }
 
 model user {
@@ -90,7 +89,7 @@ model user {
   password     String
   role         user_role?
   subscription subscription_plans?
-  candidate    candidate[]
+  candidate    candidate?
   employer     employer[]
 }
 

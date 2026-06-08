@@ -1,6 +1,19 @@
-import MainPageLayout from "@/components/ui/layout/MainPageLayout";
+"use server"
 
-export default function SettingsPage() {
+import MainPageLayout from "@/components/ui/layout/MainPageLayout";
+import { updatePreferences } from "./actions";
+import { getId } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
+
+export default async function SettingsPage() {
+  const user_id = await getId()
+  if (!user_id) redirect("/login");
+
+  const candidate = await prisma.candidate.findFirst({
+    where: { user_id: user_id},
+  })
+
   return (
     <MainPageLayout
       title="Settings"
@@ -63,38 +76,48 @@ export default function SettingsPage() {
           </SettingsSection>
         </div>
 
-        <SettingsSection title="Account preferences">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-              <label className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-                Preferred work mode
-              </label>
+        <form action={updatePreferences}>
+          <SettingsSection title="Account preferences">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <label className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                  Preferred work mode
+                </label>
 
-              <select className="mt-3 h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-                <option>Hybrid</option>
-                <option>Remote</option>
-                <option>On-site</option>
-              </select>
+                <select 
+                  key={candidate?.preferred_work_mode}
+                  name="work_mode"
+                  defaultValue={candidate?.preferred_work_mode || "HYBRID"}
+                  className="mt-3 h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                  <option value="HYBRID" >Hybrid</option>
+                  <option value="REMOTE" >Remote</option>
+                  <option value="ON_SITE" >On-site</option>
+                </select>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <label className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                  Preferred location
+                </label>
+
+                <input
+                  placeholder="e.g. Sydney"
+                  name="location"
+                  defaultValue={candidate?.preferred_location || ""}
+                  className="mt-3 h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                />
+              </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-              <label className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-                Preferred location
-              </label>
-
-              <input
-                placeholder="e.g. Sydney"
-                className="mt-3 h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-              />
+            <div className="mt-6">
+              <input 
+                type="submit"
+                value="Save Settings"
+                className="rounded-2xl bg-blue-600 px-8 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700"
+               />
             </div>
-          </div>
-
-          <div className="mt-6">
-            <button className="rounded-2xl bg-blue-600 px-8 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700">
-              Save Settings
-            </button>
-          </div>
-        </SettingsSection>
+          </SettingsSection>
+        </form>
       </section>
     </MainPageLayout>
   );

@@ -1,3 +1,5 @@
+import { MouseEventHandler, SubmitEventHandler } from "react";
+
 type SubscriptionPlanCardProps = {
     title: string;
     price: string;
@@ -5,6 +7,7 @@ type SubscriptionPlanCardProps = {
     features: string[];
     buttonText: string;
     highlighted?: boolean;
+    onSubmit?: SubmitEventHandler<HTMLInputElement>;
   };
   
   export default function SubscriptionPlanCard({
@@ -14,6 +17,7 @@ type SubscriptionPlanCardProps = {
     features,
     buttonText,
     highlighted = false,
+    onSubmit
   }: SubscriptionPlanCardProps) {
     return (
       <div
@@ -47,16 +51,18 @@ type SubscriptionPlanCardProps = {
             </li>
           ))}
         </ul>
-  
-        <button
+
+        <input 
+          type="submit" 
+          value={buttonText}
+          onSubmit={onSubmit}
           className={
             highlighted
               ? "mt-8 w-full rounded-2xl bg-indigo-600 px-6 py-4 font-semibold text-white shadow-sm transition hover:bg-indigo-700"
               : "mt-8 w-full rounded-2xl border border-slate-300 bg-white px-6 py-4 font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50"
           }
-        >
-          {buttonText}
-        </button>
+        />
+
       </div>
     );
   }

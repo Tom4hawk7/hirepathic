@@ -1,7 +1,15 @@
+"use server"
+
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import SubscriptionPlanCard from "@/components/ui/cards/SubscriptionPlanCard";
+import { subscribe, unsubscribe } from "./actions";
+import { getUser } from "@/lib/auth";
 
-export default function SubscriptionPage() {
+export default async function SubscriptionPage() {
+  const user = await getUser();
+  const freeButtonText = user?.subscription == "FREE" ? "Current Plan" : "Unsubscribe"
+  const premiumButtonText = user?.subscription == "FREE" ? "Upgrade Membership" : "Current Plan" 
+
   return (
     <MainPageLayout
       title="Membership"
@@ -25,32 +33,35 @@ export default function SubscriptionPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <SubscriptionPlanCard
-            title="Free Plan"
-            price="$0"
-            description="A basic plan for users who want to browse and receive a limited number of recommendations."
-            features={[
-              "Create seeker or employer profile",
-              "Search jobs and candidates",
-              "View top 10 recommended matches",
-              "Basic filters and browsing",
-            ]}
-            buttonText="Current Plan"
-          />
-
-          <SubscriptionPlanCard
-            title="Membership Plan"
-            price="$9.99"
-            description="A premium plan for users who want access to the full recommendation list and more visibility."
-            features={[
-              "View all recommended matches",
-              "Access full ranked candidate/job lists",
-              "Better comparison between matches",
-              "Useful for active job seekers and employers",
-            ]}
-            buttonText="Upgrade Membership"
-            highlighted
-          />
+          <form action={unsubscribe}>
+            <SubscriptionPlanCard
+              title="Free Plan"
+              price="$0"
+              description="A basic plan for users who want to browse and receive a limited number of recommendations."
+              features={[
+                "Create seeker or employer profile",
+                "Search jobs and candidates",
+                "View top 10 recommended matches",
+                "Basic filters and browsing",
+              ]}
+              buttonText={freeButtonText}
+            />
+          </form>
+          <form action={subscribe}>
+            <SubscriptionPlanCard
+              title="Membership Plan"
+              price="$9.99"
+              description="A premium plan for users who want access to the full recommendation list and more visibility."
+              features={[
+                "View all recommended matches",
+                "Access full ranked candidate/job lists",
+                "Better comparison between matches",
+                "Useful for active job seekers and employers",
+              ]}
+              buttonText={premiumButtonText}
+              highlighted
+            />
+          </form>
         </div>
 
         <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">

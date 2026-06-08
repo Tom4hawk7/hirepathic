@@ -21,7 +21,7 @@ export async function createEmployerCompany (formData: FormData) {
     const companyData = formResponse as unknown as CompanyForm;
 
     const cookieStore = await cookies();
-    const user_id = Number(cookieStore.get("userId"));
+    const user_id = Number(cookieStore.get("userId")?.value);
 
     const company = await prisma.company.create({
         data: {

@@ -22,7 +22,7 @@ export async function createJob (formData: FormData) {
     const jobData = formResponse as unknown as JobForm;
 
     const cookieStore = await cookies();
-    const user_id = Number(cookieStore.get("userId"));
+    const user_id = Number(cookieStore.get("userId")?.value);
 
     const skillList = jobData.skills
         .split(",")
