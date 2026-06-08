@@ -89,6 +89,7 @@ model user {
   password     String
   role         user_role?
   subscription subscription_plans?
+  picture      String?
   candidate    candidate?
   employer     employer[]
 }

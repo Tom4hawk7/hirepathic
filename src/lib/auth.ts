@@ -17,7 +17,7 @@ export async function getUser(): Promise<user | null> {
     const cookieStore = await cookies();
     const user_id = Number(cookieStore.get("userId")?.value);
 
-    if (!user_id) return null;
+    if (!user_id && user_id !== 0) return null;
 
     return await prisma.user.findUnique({
         where: { id: user_id }

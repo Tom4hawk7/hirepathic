@@ -16,6 +16,7 @@ export async function createEmployers(count = 100) {
                 email: faker.internet.email(),
                 password: await bcrypt.hash(faker.internet.password(), 10),
                 role: "EMPLOYER",
+                picture: faker.image.avatar(),
                 subscription: getEnumValue(subscription_plans),
 
                 employer: {
@@ -51,6 +52,7 @@ async function createTestEmployer() {
             data: {
                 email: email,
                 password: await bcrypt.hash(password, 10),
+                picture: faker.image.avatar(),
                 role: "EMPLOYER",
                 subscription: getEnumValue(subscription_plans),
 

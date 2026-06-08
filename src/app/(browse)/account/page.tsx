@@ -8,7 +8,6 @@ export default async function AccountPage() {
   const user = await getUser();
   const candidate = await getCandidate();
 
-  const imageUrl = faker.image.personPortrait({ size: 512 })
   // just a test for how it would work
 
   // doesn't work that well but this is just an example
@@ -42,7 +41,7 @@ export default async function AccountPage() {
         <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm">
             <img 
-            src={imageUrl} alt=""
+            src={user?.picture || undefined} alt=""
             className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-slate-300 bg-slate-100 text-sm font-semibold text-slate-600"/>
 
 

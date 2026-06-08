@@ -23,6 +23,7 @@ export async function createCandidates(count = 100) {
                 email: email,
                 password: await bcrypt.hash(faker.internet.password(), 10),
                 role: "SEEKER",
+                picture: faker.image.avatar(),
                 subscription: getEnumValue(subscription_plans),
 
                 candidate: {
@@ -90,6 +91,7 @@ async function createTestCandidate() {
             email: email,
             password: await bcrypt.hash(password, 10),
             role: "SEEKER",
+            picture: faker.image.avatar(),
             subscription: getEnumValue(subscription_plans),
 
             candidate: {
