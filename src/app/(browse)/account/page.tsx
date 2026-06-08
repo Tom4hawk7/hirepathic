@@ -1,16 +1,21 @@
-import MainPageLayout from "@/components/ui/layout/MainPageLayout";
+"use server"
 
-export default function AccountPage() {
-  const mockUser = {
-    name: "Alex Johnson",
-    email: "alex.johnson@example.com",
-    accountType: "Seeker",
-    membershipStatus: "Free Plan",
-    education: "Bachelor of Computer Science",
-    experience: "2 years experience",
-    preferredWorkMode: "Hybrid",
-    location: "Sydney",
-  };
+import MainPageLayout from "@/components/ui/layout/MainPageLayout";
+import { getCandidate, getEmployer, getUser } from "@/lib/auth";
+import { faker } from "@faker-js/faker";
+
+export default async function AccountPage() {
+  const user = await getUser();
+  const candidate = await getCandidate();
+
+  const imageUrl = faker.image.personPortrait({ size: 512 })
+  // just a test for how it would work
+
+  // doesn't work that well but this is just an example
+  // const profile = user?.role == "EMPLOYER"
+  //     ? await getEmployer()
+  //     : await getCandidate()
+
 
   return (
     <MainPageLayout
@@ -36,20 +41,20 @@ export default function AccountPage() {
 
         <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-            <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-slate-300 bg-slate-100 text-sm font-semibold text-slate-600">
-              Profile
-              <br />
-              Photo
-            </div>
+            <img 
+            src={imageUrl} alt=""
+            className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-slate-300 bg-slate-100 text-sm font-semibold text-slate-600"/>
+
 
             <h3 className="mt-5 text-2xl font-bold text-slate-950">
-              {mockUser.name}
+              {candidate?.full_name}
             </h3>
 
-            <p className="mt-1 text-slate-600">{mockUser.accountType}</p>
+            <p className="mt-1 text-slate-600">Candidate</p>
+            {/* <p className="mt-1 text-slate-600">{candidate}</p> */}
 
             <div className="mt-5 rounded-2xl bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700">
-              {mockUser.membershipStatus}
+              {user?.subscription}
             </div>
 
             <a
@@ -66,18 +71,26 @@ export default function AccountPage() {
             </h3>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <InfoBox label="Full Name" value={mockUser.name} />
-              <InfoBox label="Email Address" value={mockUser.email} />
-              <InfoBox label="Account Type" value={mockUser.accountType} />
-              <InfoBox label="Membership" value={mockUser.membershipStatus} />
-              <InfoBox label="Education" value={mockUser.education} />
-              <InfoBox label="Experience" value={mockUser.experience} />
-              <InfoBox
-                label="Preferred Work Mode"
-                value={mockUser.preferredWorkMode}
+              <InfoBox label="Full Name" value={candidate?.full_name || ""} />
+              <InfoBox label="Email Address" value={candidate?.email || ""} />
+              <InfoBox label="Account Type" value={user?.role || ""} />
+              <InfoBox label="Membership" value={user?.subscription || ""} />
+              {/* <InfoBox label="Education" value={candidate.education} /> */}
+              <InfoBox label="Experience" value={`${String(candidate?.years_of_experience)} Years`} />
+              <InfoBox label="Preferred Work Mode" value={candidate?.preferred_work_mode || ""}
               />
-              <InfoBox label="Location" value={mockUser.location} />
+              <InfoBox label="Location" value={candidate?.preferred_location || ""} />
             </div>
+
+            {/* <h3 className="text-2xl font-bold text-slate-950">
+              Account Details
+            </h3> */}
+
+            {/* gave a heading above as an example,
+                I would personally show something different depending on the role of the user at hand 
+                I would move the infoboxes into a div down here and show the corresponding information here
+                */}
+            
 
             <div className="mt-8 flex flex-wrap gap-4">
               <button className="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-700">

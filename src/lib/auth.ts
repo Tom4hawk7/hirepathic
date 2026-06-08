@@ -3,12 +3,14 @@ import { cookies } from "next/headers";
 import { Role, } from "@/types/user";
 import { env } from "@/config/env";
 import { prisma } from "./prisma";
-import { user } from "@prisma/client";
+import { candidate, employer, user } from "@prisma/client";
 
 export type AuthUser = {
     id: string;
     role: Role;
 }
+
+// findUnique if you could get the bloody schema to accept it (would be faster)
 
 // this is not good authentication but it is just a demo app
 export async function getUser(): Promise<user | null> {
@@ -22,27 +24,25 @@ export async function getUser(): Promise<user | null> {
     })
 }
 
+export async function getEmployer(): Promise<employer | null> {
+    const user_id = await getId();
+    if (!user_id) return null;
+
+    return await prisma.employer.findFirst({
+        where: { user_id: user_id }
+    })
+}
+
+export async function getCandidate(): Promise<candidate | null> {
+    const user_id = await getId();
+    if (!user_id) return null;
+
+    return await prisma.candidate.findFirst({
+        where: { user_id: user_id }
+    })
+}
+
 export async function getId(): Promise<number | null> {
     const cookieStore = await cookies();
     return Number(cookieStore.get("userId")?.value);
 }
-
-// export async function getAuthUser(): Promise<AuthUser | null> {
-//     const token = ((await cookies()).get("token")?.value);
-//     if (!token) return null;
-
-//     try {
-//         const { payload } = await jwtVerify(
-//             token,
-//             new TextEncoder().encode(env.JWT_SECRET)
-//         );
-
-//         return {
-//             id: payload.id as string,
-//             role: payload.role as Role
-//         };
-//     } catch {
-//         return null
-//     }
-
-// } 
