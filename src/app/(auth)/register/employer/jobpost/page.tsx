@@ -1,3 +1,5 @@
+"use server"
+
 import PopupPageLayout from "@/components/ui/layout/PopupPageLayout";
 import JobPostingForm from "@/components/ui/forms/JobPostingForm";
 import FormInput from "@/components/ui/forms/FormInput";

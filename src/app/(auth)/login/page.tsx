@@ -1,3 +1,5 @@
+"use server"
+
 import PopupPageLayout from "@/components/ui/layout/PopupPageLayout";
 import LoginForm from "@/components/ui/forms/LoginForm";
 import FormRow from "@/components/ui/forms/FormRow";
