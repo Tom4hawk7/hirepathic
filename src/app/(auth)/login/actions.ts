@@ -10,7 +10,6 @@ import { ROUTES } from "@/config/routes";
 export async function authenticateUser(formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const role = formData.get("role") as Role;
 
     const user = await prisma.user.findUnique({
         where: { email }
