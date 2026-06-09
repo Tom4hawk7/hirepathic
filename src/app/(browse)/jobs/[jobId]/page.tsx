@@ -1,9 +1,19 @@
+"use server"
+
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import JobDetailCard from "@/components/ui/cards/JobDetailCard";
+import { prisma } from "@/lib/prisma";
+// import { SearchParams } from "next/dist/server/request/search-params";
+import { getJobPageInfo } from "./actions";
+import { capitalize } from "@/lib/utils";
+import { faker } from "@faker-js/faker";
 
 type JobDetailPageProps = {
   params: Promise<{
     jobId: string;
+  }>;
+  searchParams: Promise<{
+    score: string;
   }>;
 };
 
@@ -61,30 +71,36 @@ const mockJobs = [
   },
 ];
 
-export default async function JobDetailPage({ params }: JobDetailPageProps) {
+export default async function JobDetailPage({ params, searchParams }: JobDetailPageProps) {
   const { jobId } = await params;
+  const { score } = await searchParams;
 
-  const job = mockJobs.find((item) => item.id === jobId) ?? mockJobs[0];
+  console.log("Score: ", score)
+  const job = await getJobPageInfo(Number(jobId));
+
+  const skills = job?.job_skills
+    .map(js => capitalize(js.skill.name as string))
+
 
   return (
     <MainPageLayout
-      title="Company blurb"
+      title="Company"
       searchPlaceholder="Search job descriptions..."
       searchValue="Product engineer"
     >
       <JobDetailCard
-        title={job.title}
-        company={job.company}
-        companyInfo={job.companyInfo}
-        contactEmail={job.contactEmail}
-        phone={job.phone}
-        description={job.description}
-        requiredEducation={job.requiredEducation}
-        requiredSkills={job.requiredSkills}
-        experience={job.experience}
-        workMode={job.workMode}
-        location={job.location}
-        matchScore={job.matchScore}
+        title={job?.title || ""}
+        company={job?.employer?.company?.name || ""}
+        companyInfo={job?.employer?.company?.description || ""}
+        contactEmail={job?.employer?.company?.email || ""}
+        phone={job?.employer?.company?.phone || ""}
+        description={job?.description || ""}
+        requiredEducation={job?.required_education_level || ""}
+        requiredSkills={skills || []}
+        experience={String(job?.years_of_experience) || ""}
+        workMode={job?.work_mode || "REMOTE"}
+        location={job?.location || ""}
+        matchScore={Number(score) || 50}
       />
     </MainPageLayout>
   );

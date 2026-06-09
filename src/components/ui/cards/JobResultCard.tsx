@@ -1,3 +1,5 @@
+"use client"
+
 type JobResultCardProps = {
     jobId: number;
     title: string;
@@ -26,7 +28,7 @@ type JobResultCardProps = {
         </div>
   
         <a
-          href={`/jobs/${jobId}`}
+          href={`/jobs/${jobId}?score=${matchScore}`}
           className="flex flex-1 items-center justify-between rounded-3xl border border-slate-300 bg-white px-8 py-5 shadow-sm transition hover:border-indigo-300 hover:shadow-md"
         >
           <div>

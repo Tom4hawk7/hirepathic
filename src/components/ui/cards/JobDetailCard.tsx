@@ -11,6 +11,7 @@ type JobDetailCardProps = {
     workMode: string;
     location: string;
     matchScore: number;
+    picture?: string;
   };
   
   export default function JobDetailCard({
@@ -26,15 +27,24 @@ type JobDetailCardProps = {
     workMode,
     location,
     matchScore,
+    picture,
   }: JobDetailCardProps) {
     return (
       <section className="grid gap-6 lg:grid-cols-[220px_1fr]">
         <div className="space-y-5">
-          <div className="flex h-40 items-center justify-center rounded-3xl border border-slate-300 bg-indigo-50 text-center font-semibold text-slate-700 shadow-sm">
-            Company
-            <br />
-            Logo
-          </div>
+
+          {
+            picture ? <img src={picture || undefined}
+                            className="flex h-40 items-center justify-center rounded-3xl border border-slate-300 bg-indigo-50 text-center font-semibold text-slate-700 shadow-sm" />
+                    : <div className="flex h-40 items-center justify-center rounded-3xl border border-slate-300 bg-indigo-50 text-center font-semibold text-slate-700 shadow-sm">
+                        Company
+                        <br />
+                        Logo
+                      </div>
+          }
+
+    
+          
   
           <div className="rounded-3xl border border-slate-300 bg-white p-5 shadow-sm">
             <h2 className="text-center text-lg font-bold text-slate-900">
