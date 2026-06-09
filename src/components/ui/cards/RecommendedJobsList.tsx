@@ -135,6 +135,7 @@ export default function RecommendedJobsList({
   resultLimit = 10,
   searchTerm = "Product engineer",
   filterLabel = "Filter",
+  
 }: RecommendedJobsListProps) {
   const visibleJobs = isMember ? jobs : jobs.slice(0, resultLimit);
   const hiddenCount = Math.max(jobs.length - visibleJobs.length, 0);

@@ -1,13 +1,11 @@
 "use server"
 
 import PopupPageLayout from "@/components/ui/layout/PopupPageLayout";
-import LoginForm from "@/components/ui/forms/LoginForm";
 import FormRow from "@/components/ui/forms/FormRow";
 import FormInput from "@/components/ui/forms/FormInput";
 import { authenticateUser } from "./actions";
 
 export default async function LoginPage() {
-
   return (
     <PopupPageLayout title="Login">
           
@@ -28,18 +26,19 @@ export default async function LoginPage() {
               </FormRow>
       
               <div className="pt-8 text-center">
-                <a
+                <input 
+                  type="submit"
                   className="mx-auto block w-80 rounded-2xl bg-blue-600 px-6 py-3 text-xl font-semibold text-white shadow-sm transition hover:bg-blue-700"
-                >
-                  Login
-                </a>
+                  value="Login"
+                />
       
                 <div className="mt-5 flex justify-center gap-6 text-sm font-medium">
-                  <input 
-                    type="submit" 
+                  <a 
                     className="text-slate-600 underline hover:text-slate-900"
-                    value="Create an account"
-                  />
+                    href="/"
+                  >
+                    Create an account
+                  </a>
                 </div>
               </div>
             </form>

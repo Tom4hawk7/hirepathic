@@ -1,25 +1,17 @@
+"use server"
+
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
+import { getUser } from "@/lib/auth";
+import { capitalize } from "@/lib/utils";
 
-type HomePageProps = {
-  searchParams: Promise<{
-    role?: string;
-  }>;
-};
 
-export default async function LoggedInHomePage({
-  searchParams,
-}: HomePageProps) {
-    const params = await searchParams;
-    const role = params.role?.toLowerCase();
-    
-    const isEmployer = role === "employer";
-    const isSeeker = role === "seeker";
-    
-    const roleLabel = isEmployer ? "Employer" : isSeeker ? "Seeker" : "User";
+export default async function LoggedInHomePage() {
+    const user = await getUser();
+    const isEmployer = user?.role == "EMPLOYER" ? true : false
 
   return (
     <MainPageLayout
-      title={`${roleLabel} Home Page`}
+      title={`${capitalize(user?.role || "")} Home Page`}
       searchPlaceholder="Search jobs, candidates, companies..."
     >
       <section className="space-y-8">

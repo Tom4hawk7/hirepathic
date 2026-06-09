@@ -1,21 +1,25 @@
-import MainPageLayout from "@/components/ui/layout/MainPageLayout";
-import RecommendedJobsList from "@/components/ui/cards/RecommendedJobsList";
+"use server"
 
-export default function JobsPage() {
-  const seekerHasMembership = false;
+import { getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import Jobs from "./Jobs"
+import { filterInitial } from "./actions";
 
+export default async function JobsPage() {
+  const user = await getUser();
+  
+  if (!user) redirect("/login");
+  if (user.role == "EMPLOYER") redirect("/candidates")
+    
+    const hasMembership = user.subscription === "PREMIUM";
+    const limit = hasMembership == true ? 100 : 10;
+
+    let initialJobs = await filterInitial(limit);
+    if (!initialJobs) initialJobs = [];
+
+    console.log("Initial jobs: ",initialJobs);
+    
   return (
-    <MainPageLayout
-      title="Search results - for seeker looking for companies"
-      searchPlaceholder="Search job descriptions..."
-      searchValue="Product engineer"
-    >
-      <RecommendedJobsList
-        isMember={seekerHasMembership}
-        resultLimit={10}
-        searchTerm="Product engineer"
-        filterLabel="Filter"
-      />
-    </MainPageLayout>
+    <Jobs initialJobs={initialJobs} hasMembership={hasMembership} />
   );
 }

@@ -1,6 +1,6 @@
 "use server"
 
-import { getId, getUser } from "@/lib/auth";
+import { getUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { work_mode } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -14,11 +14,11 @@ export async function updatePreferences(formData: FormData) {
     const formResponse = Object.fromEntries(formData.entries());
     const preference = formResponse as unknown as PreferenceForm;
 
-    const user_id = await getId();
-    if (!user_id) return;
+    const user = await getUser();
+    if (!user) return;
 
     const candidate = await prisma.candidate.findFirst({
-        where: { user_id }
+        where: { user_id: user.id }
     })
 
     await prisma.candidate.update({

@@ -15,10 +15,13 @@ model candidate {
   preferred_work_mode work_mode?
   preferred_location  String?
   user_id             Int               @unique
+  headline            String?
   user                user              @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "fk_user_candidate")
   skills              candidate_skill[]
   education           education[]
   work_experience     work_experience[]
+
+  @@index([headline(ops: raw("gin_trgm_ops"))], map: "candidate_title_trgm_idx", type: Gin)
 }
 
 model candidate_skill {
@@ -42,6 +45,8 @@ model company {
   phone       String?
   location    String?
   employer    employer[]
+
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "company_name_trgm_idx", type: Gin)
 }
 
 model education {
@@ -74,6 +79,8 @@ model job {
   employer_id              Int?
   employer                 employer?           @relation(fields: [employer_id], references: [id], onDelete: Cascade, map: "fk_job_employer")
   job_skills               job_skill[]
+
+  @@index([title(ops: raw("gin_trgm_ops"))], map: "job_title_trgm_idx", type: Gin)
 }
 
 model skill {
@@ -118,6 +125,7 @@ model job_skill {
 enum level_of_education {
   HIGH_SCHOOL
   DIPLOMA
+  ASSOCIATE
   BACHELORS
   MASTERS
   PHD
@@ -137,4 +145,12 @@ enum work_mode {
   REMOTE
   ON_SITE
   HYBRID
+}
+
+enum filter_type {
+  ALL
+  SKILL
+  EDUCATION
+  EXPERIENCE
+  LOCATION
 }

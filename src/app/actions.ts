@@ -8,16 +8,18 @@ import bcrypt from "bcryptjs";
 import { SUBSCRIPTION_PLANS } from "@/config/subscription-plans";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/config/routes";
+import { faker } from "@faker-js/faker";
+import { createSession } from "@/lib/auth";
 
 const FREE_SUBSCRIPTION = "FREE";
 
-export async function registerSeeker(formData: FormData) {
+export async function registerUser(formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const role = formData.get("role") as Role;
 
     const existing = await prisma.user.findUnique({
-        where: { email}
+        where: { email }
     });
 
     if (existing) {
@@ -31,15 +33,12 @@ export async function registerSeeker(formData: FormData) {
             email,
             password: hashedPassword,
             role,
-            subscription: FREE_SUBSCRIPTION
+            subscription: FREE_SUBSCRIPTION,
+            picture: faker.image.personPortrait({ size: 512 })
         }
     });
 
-    (await cookies()).set("userId", String(user.id), {
-        httpOnly: true,
-        secure: true,
-        path: "/",
-    });
+    await createSession(user.id);
 
     if (role == "SEEKER") {
         redirect(ROUTES.register.seeker);

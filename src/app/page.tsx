@@ -3,12 +3,12 @@
 import PopupPageLayout from "@/components/ui/layout/PopupPageLayout";
 import FormRow from "@/components/ui/forms/FormRow";
 import FormInput from "@/components/ui/forms/FormInput";
-import { registerSeeker } from "./actions";
+import { registerUser } from "./actions";
 
 export default async function Home() {
   return (
     <PopupPageLayout title="Create Account">
-      <form className="mx-auto mt-2 max-w-4xl space-y-6" action={registerSeeker}>
+      <form className="mx-auto mt-2 max-w-4xl space-y-6" action={registerUser}>
         <div className="flex items-center justify-between gap-8 border-b border-slate-200 pb-6">
           <p className="text-2xl font-semibold text-slate-900">
             Create an account

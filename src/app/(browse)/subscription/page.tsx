@@ -4,9 +4,12 @@ import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import SubscriptionPlanCard from "@/components/ui/cards/SubscriptionPlanCard";
 import { subscribe, unsubscribe } from "./actions";
 import { getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function SubscriptionPage() {
   const user = await getUser();
+  if (!user) redirect("/");
+
   const freeButtonText = user?.subscription == "FREE" ? "Current Plan" : "Unsubscribe"
   const premiumButtonText = user?.subscription == "FREE" ? "Upgrade Membership" : "Current Plan" 
 

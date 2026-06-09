@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { FormHTMLAttributes, useState } from "react";
 import SideMenu from "./SideMenu";
 
 type MainPageLayoutProps = {
@@ -8,6 +8,7 @@ type MainPageLayoutProps = {
   searchPlaceholder?: string;
   searchValue?: string;
   children: React.ReactNode;
+  action?: ((formData: FormData) => void) | undefined;
 };
 
 export default function MainPageLayout({
@@ -15,15 +16,18 @@ export default function MainPageLayout({
   searchPlaceholder = "Search...",
   searchValue = "",
   children,
+  action
 }: MainPageLayoutProps) {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
       <header className="border-b border-slate-200 bg-white/90 px-8 py-5 shadow-sm backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center gap-4">
+        <form 
+          action={action}
+          className="mx-auto flex max-w-7xl items-center gap-4">
           <a
-            href="/home?role=seeker"
+            href="/home"
             className="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-700"
           >
             Home
@@ -31,32 +35,40 @@ export default function MainPageLayout({
 
           <div className="flex flex-1 items-center rounded-2xl border border-slate-300 bg-white px-5 shadow-sm">
             <input
+              name="search"
               defaultValue={searchValue}
               className="h-12 w-full bg-transparent text-base text-slate-800 outline-none placeholder:text-slate-400"
               placeholder={searchPlaceholder}
             />
           </div>
 
-          <select className="h-12 rounded-2xl border border-slate-300 bg-white px-5 font-medium text-slate-700 shadow-sm outline-none transition hover:bg-slate-50">
-            <option>Filter</option>
-            <option>Skill</option>
-            <option>Education</option>
-            <option>Experience</option>
-            <option>Location</option>
+          <select 
+            name="filter_type"
+            defaultValue="ALL"
+            className="h-12 rounded-2xl border border-slate-300 bg-white px-5 font-medium text-slate-700 shadow-sm outline-none transition hover:bg-slate-50"
+          >
+            <option value="ALL" >Filter</option>
+            <option value="SKILL" >Skill</option>
+            <option value="EDUCATION" >Education</option>
+            <option value="EXPERIENCE" >Experience</option>
+            <option value="LOCATION" >Location</option>
           </select>
 
-          <button className="rounded-2xl bg-blue-600 px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700">
-            Go
-          </button>
+          <input 
+            type="submit" 
+            value="Search"
+            className="rounded-2xl bg-blue-600 px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700"
+          />
 
           <button
+            type="button"
             onClick={() => setIsSideMenuOpen(true)}
             className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-2xl font-bold leading-none text-slate-700 shadow-sm hover:bg-slate-50"
             aria-label="Open side menu"
           >
             ☰
           </button>
-        </div>
+        </form>
       </header>
 
       <section className="px-8 py-10">

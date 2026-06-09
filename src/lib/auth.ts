@@ -1,48 +1,85 @@
-import { jwtVerify } from "jose";
+"use server"
+
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { Role, } from "@/types/user";
 import { env } from "@/config/env";
 import { prisma } from "./prisma";
 import { candidate, employer, user } from "@prisma/client";
 
-export type AuthUser = {
-    id: string;
-    role: Role;
+type SessionPayload = {
+    userId: number;
 }
 
-// findUnique if you could get the bloody schema to accept it (would be faster)
+const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
 
-// this is not good authentication but it is just a demo app
-export async function getUser(): Promise<user | null> {
+export async function createSession(userId: number) {
+    const token = await new SignJWT({ userId })
+        .setProtectedHeader({ alg: "HS256" })
+        .setIssuedAt()
+        .setExpirationTime("7d")
+        .sign(secret);
+    
     const cookieStore = await cookies();
-    const user_id = Number(cookieStore.get("userId")?.value);
 
-    if (!user_id && user_id !== 0) return null;
-
-    return await prisma.user.findUnique({
-        where: { id: user_id }
+    cookieStore.set("session", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7
     })
 }
 
-export async function getEmployer(): Promise<employer | null> {
-    const user_id = await getId();
-    if (!user_id) return null;
-
-    return await prisma.employer.findFirst({
-        where: { user_id: user_id }
-    })
-}
-
-export async function getCandidate(): Promise<candidate | null> {
-    const user_id = await getId();
-    if (!user_id) return null;
-
-    return await prisma.candidate.findFirst({
-        where: { user_id: user_id }
-    })
-}
-
-export async function getId(): Promise<number | null> {
+export async function verifySession(): Promise<SessionPayload | null> {
     const cookieStore = await cookies();
-    return Number(cookieStore.get("userId")?.value);
+    const token = cookieStore.get("session")?.value;
+
+    if (!token) return null;
+
+    try {
+        const { payload } = await jwtVerify(token, secret);
+        return payload as SessionPayload;
+    } catch {
+        return null;
+    }
+}   
+
+export async function logout() {
+    const cookieStore = await cookies();
+    cookieStore.delete("session");
+}
+
+
+export async function getUser() {
+    const session = await verifySession();
+    if (!session) return null;
+
+    return prisma.user.findUnique({
+        where: {
+            id: session.userId,
+        },
+    })
+}
+
+export async function getCandidate() {
+    const session = await verifySession();
+    if (!session) return null;
+
+    return prisma.candidate.findFirst({
+        where: {
+            user_id: session.userId,
+        }
+    })
+}
+
+export async function getEmployer() {
+    const session = await verifySession();
+    if (!session) return null;
+
+    return prisma.employer.findFirst({
+        where: {
+            user_id: session.userId,
+        }
+    })
 }

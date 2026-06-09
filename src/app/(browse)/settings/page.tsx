@@ -2,17 +2,16 @@
 
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import { updatePreferences } from "./actions";
-import { getId } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { getCandidate, getEmployer, getUser } from "@/lib/auth";
 
 export default async function SettingsPage() {
-  const user_id = await getId()
-  if (!user_id) redirect("/login");
+  const user = await getUser();
+  if (!user) redirect("/login");
 
-  const candidate = await prisma.candidate.findFirst({
-    where: { user_id: user_id},
-  })
+  const candidate = await getCandidate();
+
 
   return (
     <MainPageLayout

@@ -1,8 +1,7 @@
 "use server"
 
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
-import { getCandidate, getEmployer, getUser } from "@/lib/auth";
-import { faker } from "@faker-js/faker";
+import { getCandidate, getUser } from "@/lib/auth";
 
 export default async function AccountPage() {
   const user = await getUser();
