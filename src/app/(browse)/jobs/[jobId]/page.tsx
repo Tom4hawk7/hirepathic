@@ -4,9 +4,11 @@ import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import JobDetailCard from "@/components/ui/cards/JobDetailCard";
 import { prisma } from "@/lib/prisma";
 // import { SearchParams } from "next/dist/server/request/search-params";
-import { getJobPageInfo } from "./actions";
+import { applyJob, getJobPageInfo } from "./actions";
 import { capitalize } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
+import { getCandidate, getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 type JobDetailPageProps = {
   params: Promise<{
@@ -71,12 +73,13 @@ const mockJobs = [
   },
 ];
 
-export default async function JobDetailPage({ params, searchParams }: JobDetailPageProps) {
+export default async function JobDetailPage({ params }: JobDetailPageProps) {
   const { jobId } = await params;
-  const { score } = await searchParams;
 
-  console.log("Score: ", score)
   const job = await getJobPageInfo(Number(jobId));
+  const candidate = await getCandidate();
+
+  if (!candidate) redirect("/home")
 
   const skills = job?.job_skills
     .map(js => capitalize(js.skill.name as string))
@@ -89,6 +92,8 @@ export default async function JobDetailPage({ params, searchParams }: JobDetailP
       searchValue="Product engineer"
     >
       <JobDetailCard
+        jobId={job?.id || null}
+        candidateId={candidate.id || null}
         title={job?.title || ""}
         company={job?.employer?.company?.name || ""}
         companyInfo={job?.employer?.company?.description || ""}
@@ -97,10 +102,9 @@ export default async function JobDetailPage({ params, searchParams }: JobDetailP
         description={job?.description || ""}
         requiredEducation={job?.required_education_level || ""}
         requiredSkills={skills || []}
-        experience={String(job?.years_of_experience) || ""}
+        experience={`${job?.years_of_experience} Years` || ""}
         workMode={job?.work_mode || "REMOTE"}
         location={job?.location || ""}
-        matchScore={Number(score) || 50}
       />
     </MainPageLayout>
   );

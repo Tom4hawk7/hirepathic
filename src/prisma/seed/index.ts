@@ -5,6 +5,7 @@ import { createJobs } from "./jobs";
 import { createCandidates } from "./candidate";
 import { generatePictures } from "./pictures";
 import { seedHeadlines } from "./headlines";
+import { seedApplications } from "./applications";
 
 const SEED_TRIGGER_NUM = 10;
 
@@ -25,4 +26,5 @@ async function seedDatabase() {
 
 // seedDatabase();
 // generatePictures();
-seedHeadlines();
+// seedHeadlines();
+// seedApplications();

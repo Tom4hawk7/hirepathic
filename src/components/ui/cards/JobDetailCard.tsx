@@ -1,4 +1,11 @@
+"use client"
+
+import { applyJob } from "@/app/(browse)/jobs/[jobId]/actions";
+import { MouseEventHandler } from "react";
+
 type JobDetailCardProps = {
+    jobId: number | null;
+    candidateId: number | null;
     title: string;
     company: string;
     companyInfo: string;
@@ -10,11 +17,12 @@ type JobDetailCardProps = {
     experience: string;
     workMode: string;
     location: string;
-    matchScore: number;
     picture?: string;
   };
   
   export default function JobDetailCard({
+    jobId,
+    candidateId,
     title,
     company,
     companyInfo,
@@ -26,7 +34,6 @@ type JobDetailCardProps = {
     experience,
     workMode,
     location,
-    matchScore,
     picture,
   }: JobDetailCardProps) {
     return (
@@ -70,9 +77,6 @@ type JobDetailCardProps = {
   
         <div className="rounded-3xl border border-slate-300 bg-white p-8 shadow-sm">
           <div className="text-center">
-            <p className="mb-3 inline-block rounded-full bg-indigo-100 px-4 py-2 text-sm font-semibold text-indigo-700">
-              {matchScore}% Match
-            </p>
   
             <h1 className="text-3xl font-bold text-slate-950">{title}</h1>
             <p className="mt-2 text-xl font-semibold text-slate-700">
@@ -117,12 +121,12 @@ type JobDetailCardProps = {
             </div>
   
             <div className="pt-2 text-center">
-              <a
-                href="/applications"
+              <button
+                onClick={() => applyJob(jobId as number, candidateId as number)}
                 className="inline-block rounded-2xl bg-indigo-600 px-10 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-indigo-700"
               >
                 Apply / Save Job
-              </a>
+              </button>
             </div>
           </div>
         </div>

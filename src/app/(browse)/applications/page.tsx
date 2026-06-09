@@ -1,6 +1,54 @@
-import MainPageLayout from "@/components/ui/layout/MainPageLayout";
+"use server"
 
-export default function ApplicationsPage() {
+import MainPageLayout from "@/components/ui/layout/MainPageLayout";
+import { getCandidate, getUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
+
+export default async function ApplicationsPage() {
+  const user = await getUser();
+  if (!user) redirect("/login");
+
+  const candidate = await getCandidate();
+
+  const applications = await prisma.application.findMany({
+    where: { candidate_id: candidate?.id },
+    select: {
+      id: true,
+      applied_at: true,
+    
+      candidate: true,
+
+      job: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          required_education_level: true,
+          work_mode: true,
+          location: true,
+
+
+          employer: {
+            select: {
+              company: {
+                select: {
+                  name: true
+                }
+              },
+              user: {
+                select: {
+                  picture: true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+
+
   const mockApplications = [
     {
       id: 1,
@@ -73,33 +121,33 @@ export default function ApplicationsPage() {
           </div>
 
           <div className="space-y-5">
-            {mockApplications.map((job) => (
+            {applications.map((application) => (
               <a
-                key={job.id}
-                href={`/jobs/${job.id}`}
+                key={application.id}
+                href={`/jobs/${application.job.id}`}
                 className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 md:flex-row md:items-center md:justify-between"
               >
                 <div>
                   <h4 className="text-xl font-bold text-slate-950">
-                    {job.title}
+                    {application.job.title}
                   </h4>
 
                   <p className="mt-1 font-semibold text-slate-700">
-                    {job.company}
+                    {application.job.employer?.company?.name}
                   </p>
 
                   <p className="mt-1 text-sm text-slate-600">
-                    {job.location} · {job.workMode}
+                    {application.job.location} · {application.job.work_mode}
                   </p>
 
                   <p className="mt-1 text-sm text-slate-500">
-                    Added on {job.date}
+                    Added on {application.applied_at.toDateString()}
                   </p>
                 </div>
 
                 <div className="text-left md:text-right">
                   <span className="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-                    {job.status}
+                    Applied
                   </span>
                 </div>
               </a>

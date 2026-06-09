@@ -20,6 +20,7 @@ model candidate {
   skills              candidate_skill[]
   education           education[]
   work_experience     work_experience[]
+  applications        application[]
 
   @@index([headline(ops: raw("gin_trgm_ops"))], map: "candidate_title_trgm_idx", type: Gin)
 }
@@ -79,6 +80,7 @@ model job {
   employer_id              Int?
   employer                 employer?           @relation(fields: [employer_id], references: [id], onDelete: Cascade, map: "fk_job_employer")
   job_skills               job_skill[]
+  applications             application[]
 
   @@index([title(ops: raw("gin_trgm_ops"))], map: "job_title_trgm_idx", type: Gin)
 }
@@ -110,6 +112,23 @@ model work_experience {
   start_date   DateTime?  @db.Date
   end_date     DateTime?  @db.Date
   candidate    candidate? @relation(fields: [candidate_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_candidate_work_experience")
+}
+
+model application {
+  id Int @id @default(autoincrement())
+
+  candidate_id Int
+  job_id       Int
+
+  applied_at DateTime @default(now())
+
+  candidate candidate @relation(fields: [candidate_id], references: [id], onDelete: Cascade)
+
+  job job @relation(fields: [job_id], references: [id], onDelete: Cascade)
+
+  @@unique([candidate_id, job_id])
+  @@index([candidate_id])
+  @@index([job_id])
 }
 
 model job_skill {
