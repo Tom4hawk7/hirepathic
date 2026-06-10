@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { work_mode } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { getUser } from "@/lib/auth";
 
 interface SeekerForm {
     full_name: string;
@@ -18,14 +19,14 @@ export async function createJob(formData: FormData) {
     const formResponse = Object.fromEntries(formData.entries());
     const seekerData = formResponse as unknown as SeekerForm;
 
-    const cookieStore = await cookies();
-    const user_id = Number(cookieStore.get("userId"));
+    const user = await getUser();
+    if (!user) redirect ("/login");
 
     // Field of study needs to be in another form with more education focused stuff
 
     const candidate = await prisma.candidate.create({
         data: {
-            user_id: user_id,
+            user_id: user?.id as number,
 
             full_name: seekerData.full_name,
             phone: seekerData.phone,

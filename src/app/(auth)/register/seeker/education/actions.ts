@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { level_of_education } from "@prisma/client";
 import { ROUTES } from "@/config/routes";
+import { getUser } from "@/lib/auth";
 
 interface EducationForm {
     institution: string;
@@ -17,11 +18,10 @@ export async function createEducation(formData: FormData) {
     const formResponse = Object.fromEntries(formData.entries());
     const educationData = formResponse as unknown as EducationForm;
 
-    const cookieStore = await cookies();
-    const user_id = Number(cookieStore.get("userId"));
+    const user = await getUser();
 
     const candidate = await prisma.candidate.findFirst({
-        where: { user_id }
+        where: { user_id: user?.id }
     })
 
     const education = await prisma.education.create({
@@ -35,5 +35,5 @@ export async function createEducation(formData: FormData) {
         }
     })
 
-    redirect(ROUTES.dashboard.seeker);
+    redirect("/home");
 }

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { ROUTES } from "@/config/routes";
 import path from "path";
+import { getUser } from "@/lib/auth";
 
 interface CompanyForm {
     name: string;
@@ -20,8 +21,7 @@ export async function createEmployerCompany (formData: FormData) {
     const formResponse = Object.fromEntries(formData.entries());
     const companyData = formResponse as unknown as CompanyForm;
 
-    const cookieStore = await cookies();
-    const user_id = Number(cookieStore.get("userId")?.value);
+    const user = await getUser();
 
     const company = await prisma.company.create({
         data: {
@@ -37,7 +37,7 @@ export async function createEmployerCompany (formData: FormData) {
 
     const employer = await prisma.employer.create({
         data: {
-            user_id: user_id,
+            user_id: user?.id,
             company_id: company.id
         }
     })

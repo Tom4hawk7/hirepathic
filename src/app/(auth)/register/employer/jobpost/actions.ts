@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { ROUTES } from "@/config/routes";
 import { level_of_education, work_mode } from "@prisma/client";
 import path from "path";
+import { getUser } from "@/lib/auth";
 
 interface JobForm {
     title: string;
@@ -21,8 +22,7 @@ export async function createJob (formData: FormData) {
     const formResponse = Object.fromEntries(formData.entries());
     const jobData = formResponse as unknown as JobForm;
 
-    const cookieStore = await cookies();
-    const user_id = Number(cookieStore.get("userId")?.value);
+    const user = await getUser();
 
     const skillList = jobData.skills
         .split(",")
@@ -31,7 +31,7 @@ export async function createJob (formData: FormData) {
 
 
     const employer = await prisma.employer.findFirst({
-        where: { user_id }
+        where: { user_id: user?.id }
     })
 
     const job = await prisma.job.create({
