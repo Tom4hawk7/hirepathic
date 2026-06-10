@@ -7,7 +7,7 @@ import { filterInitial } from "./actions";
 
 export default async function JobsPage() {
   const user = await getUser();
-  
+
   if (!user) redirect("/login");
   if (user.role == "EMPLOYER") redirect("/candidates")
     
