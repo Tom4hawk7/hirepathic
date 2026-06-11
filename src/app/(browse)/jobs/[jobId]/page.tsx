@@ -3,7 +3,7 @@
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import JobDetailCard from "@/components/ui/cards/JobDetailCard";
 import { getJobPageInfo } from "./actions";
-import { capitalize } from "@/lib/utils";
+import { capitalize, convertEduLevel } from "@/lib/utils";
 import { getCandidate } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -34,11 +34,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
 
   return (
-    <MainPageLayout
-      title="Company"
-      searchPlaceholder="Search job descriptions..."
-      searchValue="Product engineer"
-    >
       <JobDetailCard
         jobId={job?.id || null}
         candidateId={candidate.id || null}
@@ -49,12 +44,11 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         contactEmail={job?.employer?.company?.email || ""}
         phone={job?.employer?.company?.phone || ""}
         description={job?.description || ""}
-        requiredEducation={job?.required_education_level || ""}
+        requiredEducation={convertEduLevel(job?.required_education_level || "HIGH_SCHOOL")}
         requiredSkills={skills || []}
         experience={`${job?.years_of_experience} Years` || ""}
-        workMode={job?.work_mode || "REMOTE"}
+        workMode={capitalize(job?.work_mode || "REMOTE")}
         location={job?.location || ""}
       />
-    </MainPageLayout>
   );
 }

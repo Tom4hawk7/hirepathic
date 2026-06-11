@@ -14,10 +14,6 @@ export default async function SubscriptionPage() {
   const premiumButtonText = user?.subscription == "FREE" ? "Upgrade Membership" : "Current Plan" 
 
   return (
-    <MainPageLayout
-      title="Membership"
-      searchPlaceholder="Search jobs, candidates, companies..."
-    >
       <section className="space-y-8">
         <div className="rounded-3xl border border-slate-200 bg-gradient-to-r from-amber-50 to-indigo-50 p-8 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-wide text-amber-700">
@@ -82,6 +78,5 @@ export default async function SubscriptionPage() {
           </p>
         </div>
       </section>
-    </MainPageLayout>
   );
 }

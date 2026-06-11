@@ -73,7 +73,5 @@ export async function getCandidateInfo(candidateId: number) {
 
     })
 
-    console.log(candidate)
-
     return candidate;
 }

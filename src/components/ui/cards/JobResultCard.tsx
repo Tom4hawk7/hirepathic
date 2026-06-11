@@ -1,12 +1,15 @@
 "use client"
 
+import { convertWorkMode } from "@/lib/utils";
+import { work_mode } from "@prisma/client";
+
 type JobResultCardProps = {
     jobId: number;
     title: string;
     company: string;
     location: string;
     picture?: string;
-    workMode: string;
+    workMode: work_mode;
     requiredSkills: string[];
     matchScore: number;
   };
@@ -35,7 +38,7 @@ type JobResultCardProps = {
             <h2 className="text-xl font-bold text-slate-900">{title}</h2>
             <p className="mt-1 text-slate-600">{company}</p>
             <p className="text-slate-600">
-              {location} · {workMode}
+              {location} · {convertWorkMode(workMode || "REMOTE")}
             </p>
   
             <div className="mt-3 flex flex-wrap gap-2">

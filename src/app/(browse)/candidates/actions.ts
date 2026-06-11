@@ -15,6 +15,8 @@ const educationRank = {
   PHD: 6
 };
 
+
+
 interface FilterForm {
     search: string,
     filter_type: filter_type
@@ -28,7 +30,7 @@ export async function searchCandidatesForm(formData: FormData): Promise<Candidat
 
 }
 
-export async function searchCandidates(search: string, filter: filter_type): Promise<Candidate[] | undefined> {
+export async function searchCandidates(search: string, filter: filter_type | ""): Promise<Candidate[] | undefined> {
     const user = await getUser();
     if (!user) return;
     
@@ -61,16 +63,12 @@ export async function searchCandidates(search: string, filter: filter_type): Pro
     return result as Candidate[];
 }
 
-export async function filterInitialCandidates(limit: number): Promise<Candidate[]> {
+export async function filterInitialCandidates(limit: number): Promise<Candidate[] | undefined> {
     return await filterInitial(limit);
 }
 
 
-const test = await prisma.$queryRaw`
-
-`
-
-export async function filterInitial(limit: number): Promise<Candidate[]> {
+export async function filterInitial(limit: number): Promise<Candidate[] | undefined> {
     const results = await prisma.$queryRaw`
     WITH job_base AS (
         SELECT
@@ -223,15 +221,22 @@ export async function filterInitial(limit: number): Promise<Candidate[]> {
         picture
     FROM deduped
     WHERE rn = 1
+        AND name IS NOT NULL
+        AND education_level IS NOT NULL
+        AND education IS NOT NULL
+        AND experience IS NOT NULL
+        AND skills IS NOT NULL
+        AND "matchScore" IS NOT NULL
+        AND PICTURE IS NOT NULL
     ORDER BY "matchScore" DESC
     LIMIT ${limit};
     `;
 
-    return results as Candidate[];
+    return results as Promise<Candidate[] | undefined>;
 } 
 
 
-async function filterAll(query: string, limit: number) {
+async function filterAll(query: string, limit: number): Promise<Candidate[] | undefined> {
     const results = await prisma.$queryRaw`
     WITH candidate_base AS (
         SELECT
@@ -369,19 +374,27 @@ async function filterAll(query: string, limit: number) {
         "matchScore",
         "picture"
     FROM ranked_candidates
+    WHERE 
+        name IS NOT NULL
+        AND education IS NOT NULL
+        AND experience IS NOT NULL
+        AND skills IS NOT NULL
+        AND "matchScore" IS NOT NULL
+        AND PICTURE IS NOT NULL
     ORDER BY "matchScore" DESC
     LIMIT ${limit};`;   
 
-    return results;
+    return results as Promise<Candidate[] | undefined>;
 }
 
-async function filterSkill(query: string, limit: number) {
-
+async function filterSkill(query: string, limit: number): Promise<Candidate[] | undefined> {
+    return undefined;
 }
 
-async function filterEducation(query: string, limit: number) {
+async function filterEducation(query: string, limit: number): Promise<Candidate[] | undefined> {
+    return undefined;
 }
 
-async function filterLocation(query: string, limit: number) {
-
+async function filterLocation(query: string, limit: number): Promise<Candidate[] | undefined> {
+    return undefined;
 }

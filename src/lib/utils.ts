@@ -1,3 +1,4 @@
+import { level_of_education, work_mode } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -21,4 +22,22 @@ export function capitalize(str: string): string {
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export function convertWorkMode(workMode: work_mode = "REMOTE") {
+  switch (workMode) {
+    case "ON_SITE":
+      return "On Site"
+    default:
+      return capitalize(workMode)
+  }
+}
+
+export function convertEduLevel(education: level_of_education = "HIGH_SCHOOL") {
+  switch (education) {
+    case "HIGH_SCHOOL": 
+      return "High School"
+    default:
+      return capitalize(education)
+  }
 }

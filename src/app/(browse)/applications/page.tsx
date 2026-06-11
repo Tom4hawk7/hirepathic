@@ -80,10 +80,6 @@ export default async function ApplicationsPage() {
   ];
 
   return (
-    <MainPageLayout
-      title="Applications"
-      searchPlaceholder="Search jobs, candidates, companies..."
-    >
       <section className="space-y-8">
         <div className="rounded-3xl border border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-8 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
@@ -155,6 +151,5 @@ export default async function ApplicationsPage() {
           </div>
         </div>
       </section>
-    </MainPageLayout>
   );
 }

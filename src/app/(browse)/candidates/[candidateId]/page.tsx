@@ -5,7 +5,7 @@ import CandidateProfileCard from "@/components/ui/cards/CandidateProfileCard";
 import { getUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getCandidateInfo } from "./actions";
-import { capitalize } from "@/lib/utils";
+import { capitalize, convertEduLevel } from "@/lib/utils";
 
 type CandidateDetailPageProps = {
   params: Promise<{
@@ -61,7 +61,7 @@ export default async function CandidateDetailPage({params}: CandidateDetailPageP
   const candidate = await getCandidateInfo(Number(candidateId));
   if (!candidate) redirect("/candidates");
 
-  const education = capitalize(candidate?.education[0].education_level as string) + ` | ${candidate?.education[0].degree}`
+  const education = convertEduLevel(candidate.education[0].education_level || "HIGH_SCHOOL");
   const skills = candidate?.skills.map((item) => item.skills.name) as string[];
 
   return (
@@ -72,7 +72,7 @@ export default async function CandidateDetailPage({params}: CandidateDetailPageP
     >
       <CandidateProfileCard
         name={candidate.full_name || ""}
-        education={education || ""}
+        education={`${education} | ${candidate?.education[0].degree}` || ""}
         experience={String(candidate.years_of_experience) || "0"}
         skills={skills}
         picture={candidate.user.picture || ""}

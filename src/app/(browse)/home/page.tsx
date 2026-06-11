@@ -14,10 +14,6 @@ export default async function LoggedInHomePage() {
     const isEmployer = user?.role == "EMPLOYER" ? true : false
 
   return (
-    <MainPageLayout
-      title={`${capitalize(user?.role || "")} Home Page`}
-      searchPlaceholder="Search jobs, candidates, companies..."
-    >
       <section className="space-y-8">
         <div className="rounded-3xl border border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-8 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
@@ -39,7 +35,6 @@ export default async function LoggedInHomePage() {
 
         {isEmployer ? <EmployerHomeContent /> : <SeekerHomeContent />}
       </section>
-    </MainPageLayout>
   );
 }
 
@@ -250,6 +245,7 @@ async function EmployerHomeContent() {
           </a>
         </div>
 
+        { candidates ?
         <div className="grid gap-4 md:grid-cols-4">
           {candidates.map((candidate) => (
             <a
@@ -273,6 +269,10 @@ async function EmployerHomeContent() {
             </a>
           ))}
         </div>
+        :
+        <></>
+        }
+
       </div>
     </>
   );

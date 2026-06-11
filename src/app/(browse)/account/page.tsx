@@ -32,20 +32,7 @@ export default async function AccountPage() {
     })
   }
   
-
-  // just a test for how it would work
-
-  // doesn't work that well but this is just an example
-  // const profile = user?.role == "EMPLOYER"
-  //     ? await getEmployer()
-  //     : await getCandidate()
-
-
   return (
-    <MainPageLayout
-      title="My Account"
-      searchPlaceholder="Search jobs, candidates, companies..."
-    >
       <section className="space-y-8">
         <div className="rounded-3xl border border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-8 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
@@ -58,8 +45,7 @@ export default async function AccountPage() {
 
           <p className="mt-3 max-w-3xl leading-7 text-slate-600">
             View your account details, profile information, and membership
-            status. This page is frontend-only for now and can later be connected
-            to backend user data.
+            status.
           </p>
         </div>
 
@@ -95,7 +81,7 @@ export default async function AccountPage() {
                 ? <InfoBox label="Full Name" value={candidate?.full_name || ""} />
                 : <InfoBox label="Company" value={employer?.company?.name || "" } />
               }
-              
+
               <InfoBox label="Email Address" value={user?.email || ""} />
               <InfoBox label="Account Type" value={capitalize(user?.role || "") || ""} />
               <InfoBox label="Membership" value={capitalize(user?.subscription || "") || ""} />
@@ -119,7 +105,6 @@ export default async function AccountPage() {
           </div>
         </div>
       </section>
-    </MainPageLayout>
   );
 }
 

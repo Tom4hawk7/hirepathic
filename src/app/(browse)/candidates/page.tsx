@@ -2,22 +2,37 @@
 
 import { getEmployer, getUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { filterInitial } from "./actions";
-import CandidatesList from "./Candidates";
+import { filterInitial, searchCandidates } from "./actions";
+import { filter_type } from "@prisma/client";
+import RecommendedSeekersList from "@/components/ui/cards/RecommendedSeekersList";
 
-export default async function EmployerRecommendedSeekersPage() {
+interface CandidatePageProps {
+  searchParams: Promise<{
+    search?: string;
+    filter_type?: filter_type;
+  }>
+}
+
+
+export default async function EmployerRecommendedSeekersPage({ searchParams }: CandidatePageProps ) {
+  const { search, filter_type } = await searchParams;
+
   const user = await getUser();
   if (!user) redirect("/login");
 
   const employer = await getEmployer();
   if (!employer) redirect("/home")
   
-  const employerHasMembership = user.subscription == "PREMIUM";
-  const limit = employerHasMembership ? 100 : 10;
-
-  const initialData = await filterInitial(limit);
+  const limit = user.subscription == "PREMIUM" ? 100 : 10;
+  const candidates = await searchCandidates(search || "", filter_type || "")
 
   return (
-    <CandidatesList hasMembership={employerHasMembership} profiles={initialData} />
+    <RecommendedSeekersList
+            candidates={candidates}
+            isMember={user.subscription == "PREMIUM"}
+            resultLimit={limit}
+            searchTerm=""
+            filterLabel="Filter"
+    />
   );
 }

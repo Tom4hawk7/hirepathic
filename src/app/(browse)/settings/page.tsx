@@ -14,10 +14,6 @@ export default async function SettingsPage() {
 
 
   return (
-    <MainPageLayout
-      title="Settings"
-      searchPlaceholder="Search jobs, candidates, companies..."
-    >
       <section className="space-y-8">
         <div className="rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50 p-8 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
@@ -118,7 +114,6 @@ export default async function SettingsPage() {
           </SettingsSection>
         </form>
       </section>
-    </MainPageLayout>
   );
 }
 
