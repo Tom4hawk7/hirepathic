@@ -4,20 +4,51 @@ import { useState } from "react";
 import FormInput from "@/components/ui/forms/FormInput";
 import FormRow from "@/components/ui/forms/FormRow";
 
-type WorkExperience = {
+export type WorkExperience = {
   id: number;
+  company: string;
+  job_title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
 };
 
 export default function WorkExperienceForm() {
   const [experiences, setExperiences] = useState<WorkExperience[]>([
-    { id: Date.now() },
+    { 
+      id: Date.now(),
+      company: "",
+      job_title: "",
+      description: "",
+      start_date: "",
+      end_date: "",
+     },
   ]);
 
   function addExperience() {
     setExperiences((current) => [
       ...current,
-      { id: Date.now() },
+      { 
+        id: Date.now(),
+        company: "",
+        job_title: "",
+        description: "",
+        start_date: "",
+        end_date: "",
+      },
     ]);
+  }
+
+  function updateExperience(
+    id: number,
+    field: keyof WorkExperience,
+    value: string
+  ) {
+    setExperiences((current) =>
+      current.map((exp) =>
+        exp.id === id ? { ...exp, [field]: value } : exp
+      )
+    );
   }
 
   function removeExperience(id: number) {
@@ -37,6 +68,12 @@ export default function WorkExperienceForm() {
           Add any previous or current jobs.
         </p>
       </div>
+
+      <input
+        type="hidden"
+        name="work_experiences"
+        value={JSON.stringify(experiences)}
+      />
 
       {experiences.map((experience, index) => (
         <div
@@ -60,36 +97,52 @@ export default function WorkExperienceForm() {
           </div>
 
           <FormRow label="Job title">
-            <FormInput name={`work_experiences[${index}][job_title]`} />
+            <FormInput 
+              value={experience.job_title}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                updateExperience(experience.id, "job_title", e.target.value)
+              }
+            />
           </FormRow>
 
           <FormRow label="Company">
-            <FormInput name={`work_experiences[${index}][company]`} />
+            <FormInput
+              value={experience.company}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                updateExperience(experience.id, "company", e.target.value)
+              }
+            />
           </FormRow>
 
-          <FormRow label="Location">
-            <FormInput name={`work_experiences[${index}][location]`} />
-          </FormRow>
 
           <FormRow label="Start date">
             <input
-              type="month"
-              name={`work_experiences[${index}][start_date]`}
+              type="date"
+              value={experience.start_date}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                updateExperience(experience.id, "start_date", e.target.value)
+              }
               className="h-12 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
             />
           </FormRow>
 
           <FormRow label="End date">
             <input
-              type="month"
-              name={`work_experiences[${index}][end_date]`}
+              type="date"
+              value={experience.end_date}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                updateExperience(experience.id, "end_date", e.target.value)
+              }
               className="h-12 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
             />
           </FormRow>
 
-          <FormRow label="Responsibilities">
+          <FormRow label="Description">
             <textarea
-              name={`work_experiences[${index}][description]`}
+              value={experience.description}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
+                updateExperience(experience.id, "description", e.target.value)
+              }
               rows={4}
               className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
               placeholder="Describe your main responsibilities and achievements"

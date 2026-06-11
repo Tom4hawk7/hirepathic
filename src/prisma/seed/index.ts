@@ -22,9 +22,11 @@ async function seedDatabase() {
     await createJobs();
     await createCandidates();
 
+    await generatePictures();
+    await seedHeadlines();
+    await seedApplications();
+
+
 }
 
-// seedDatabase();
-// generatePictures();
-// seedHeadlines();
-// seedApplications();
+seedDatabase();

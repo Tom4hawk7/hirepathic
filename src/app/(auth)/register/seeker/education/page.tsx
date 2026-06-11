@@ -1,7 +1,10 @@
+"use server"
+
 import PopupPageLayout from "@/components/ui/layout/PopupPageLayout";
 import FormInput from "@/components/ui/forms/FormInput";
 import FormRow from "@/components/ui/forms/FormRow";
 import WorkExperienceForm from "@/components/ui/forms/WorkExperienceForm";
+import { saveProfile } from "./actions";
 
 export default async function SeekerEducationPage() {
   return (
@@ -16,7 +19,7 @@ export default async function SeekerEducationPage() {
         </p>
       </div>
 
-      <form className="mx-auto max-w-4xl space-y-5">
+      <form action={saveProfile} className="mx-auto max-w-4xl space-y-5">
         <section className="space-y-5">
           <div>
             <h3 className="text-xl font-bold text-slate-900">
@@ -40,9 +43,6 @@ export default async function SeekerEducationPage() {
             <FormInput name="field_of_study" />
           </FormRow>
 
-          <FormRow label="Major">
-            <FormInput name="major" />
-          </FormRow>
 
           <FormRow label="Education level" smallLabel>
             <select

@@ -32,7 +32,7 @@ export async function createJob(formData: FormData) {
             phone: seekerData.phone,
             email: seekerData.email,
 
-            years_of_experience: seekerData.years_of_experience,
+            years_of_experience: Number(seekerData.years_of_experience),
             preferred_work_mode: seekerData.preferred_work_mode,
             preferred_location: seekerData.preferred_location
         } 
