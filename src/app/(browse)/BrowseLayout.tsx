@@ -33,6 +33,7 @@ export default function ClientBrowseLayout({ children, user }: BrowseLayoutProps
   const pathname = usePathname();
 
   let title = titleMap[pathname] ?? "Home";
+  let extended = pathname == "/jobs" || pathname == "/candidates";
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
@@ -84,6 +85,7 @@ export default function ClientBrowseLayout({ children, user }: BrowseLayoutProps
           </button>
         </div>
 
+        { extended &&
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <select className="h-10 cursor-pointer rounded-full border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition hover:bg-slate-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
             <option value="ALL">Pay</option>
@@ -117,6 +119,7 @@ export default function ClientBrowseLayout({ children, user }: BrowseLayoutProps
             <option value="30_DAYS">Last 30 days</option>
           </select>
         </div>
+        }
       </form>
     </header>
     
