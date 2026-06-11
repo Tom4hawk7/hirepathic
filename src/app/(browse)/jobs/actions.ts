@@ -81,6 +81,7 @@ export async function filterInitial(limit: number) {
             job.title,
             job.location,
             job.work_mode AS "workMode",
+            u.picture AS "picture",
             company.name AS company,
 
             COALESCE(
@@ -126,10 +127,16 @@ export async function filterInitial(limit: number) {
         FROM job
         JOIN employer ON job.employer_id = employer.id
         JOIN company ON employer.company_id = company.id
+
+        LEFT JOIN "user" u ON u.id = employer.user_id
+        
         LEFT JOIN job_skill ON job_skill.job_id = job.id
         LEFT JOIN skill ON skill.id = job_skill.skill_id
 
-        GROUP BY job.id, company.name
+        GROUP BY 
+            job.id, 
+            company.name,
+            picture
         ORDER BY "matchScore" DESC
         LIMIT ${limit};
     `;

@@ -19,6 +19,7 @@ export async function getJobPageInfo(jobId: number) {
             employer: {
                 include: {
                     company: true,
+                    user: true
                 },
             },
             job_skills: {

@@ -6,6 +6,7 @@ type Job = {
   company: string;
   location: string;
   workMode: string;
+  picture?: string;
   requiredSkills: string[];
   matchScore: number;
 };
@@ -173,6 +174,7 @@ export default function RecommendedJobsList({
             key={job.id}
             jobId={job.id}
             title={job.title}
+            picture={job.picture}
             company={job.company}
             location={job.location}
             workMode={job.workMode}

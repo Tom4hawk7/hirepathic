@@ -135,13 +135,11 @@ export default function RecommendedSeekersList({
     <section>
       <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-lg font-semibold text-slate-700">
-            Showing Results for: {searchTerm} + {filterLabel}
-          </p>
-
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mb-4 text-lg font-semibold text-slate-700">
             Showing {visibleCandidates.length} of {candidates.length} recommended seekers.
           </p>
+
+   
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">

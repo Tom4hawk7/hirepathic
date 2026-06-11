@@ -1,11 +1,8 @@
 "use server"
 
-"use server"
-
 import { filter_type } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
-import { getRecentExperience, getSkills } from "@/lib/headline";
-import { getCandidate, getUser } from "@/lib/auth";
+import { getUser } from "@/lib/auth";
 import { Candidate } from "@/components/ui/cards/RecommendedSeekersList";
 
 
@@ -64,12 +61,39 @@ export async function searchCandidates(search: string, filter: filter_type): Pro
     return result as Candidate[];
 }
 
+export async function filterInitialCandidates(limit: number): Promise<Candidate[]> {
+    return await filterInitial(limit);
+}
+
+
+const test = await prisma.$queryRaw`
+
+`
+
 export async function filterInitial(limit: number): Promise<Candidate[]> {
     const results = await prisma.$queryRaw`
-    WITH candidate_base AS (
+    WITH job_base AS (
+        SELECT
+            j.id,
+            j.title,
+            j.description,
+            j.required_education_level,
+            j.years_of_experience,
+            j.work_mode,
+            j.location,
+            c.name AS company
+        FROM job j
+        JOIN employer e ON e.id = j.employer_id
+        JOIN company c ON c.id = e.company_id
+        ORDER BY j.id
+        LIMIT 1
+    ),
+
+    candidate_base AS (
         SELECT
             c.id,
             c.full_name,
+            c.headline,
             c.years_of_experience,
             c.preferred_location,
             c.user_id
@@ -93,19 +117,13 @@ export async function filterInitial(limit: number): Promise<Candidate[]> {
         GROUP BY ce.candidate_id
     ),
 
-    job_base AS (
-        SELECT
-            j.id,
-            j.title,
-            j.description,
-            j.required_education_level,
-            j.years_of_experience,
-            j.work_mode,
-            j.location,
-            c.name AS company
-        FROM job j
-        JOIN employer e ON e.id = j.employer_id
-        JOIN company c ON c.id = e.company_id
+    candidate_education AS (
+        SELECT DISTINCT ON (e.candidate_id)
+            e.candidate_id,
+            e.degree,
+            e.education_level
+        FROM education e
+        ORDER BY e.candidate_id
     ),
 
     ranked_candidates AS (
@@ -115,16 +133,18 @@ export async function filterInitial(limit: number): Promise<Candidate[]> {
 
             c.id AS "candidateId",
             c.full_name AS name,
+            c.headline,
+            e.degree AS "education",
 
-            e.degree AS education,
+            e.education_level,
             c.years_of_experience AS experience,
             c.preferred_location AS location,
             j.company,
 
             u.picture AS picture,
             sk.skills AS skills,
+            exp.job_title AS last_job_title,
 
-      
             ROUND(
                 (
                     -- Title match (0–50)
@@ -170,33 +190,42 @@ export async function filterInitial(limit: number): Promise<Candidate[]> {
         FROM job_base j
         CROSS JOIN candidate_base c
 
-        LEFT JOIN education e
+        LEFT JOIN candidate_skills sk
+            ON sk.candidate_id = c.id
+
+        LEFT JOIN candidate_experience exp
+            ON exp.candidate_id = c.id
+
+        LEFT JOIN candidate_education e
             ON e.candidate_id = c.id
 
-        LEFT JOIN work_experience exp
-            ON exp.candidate_id = c.id
-        
-        LEFT JOIN candidate_skills sk 
-            ON sk.candidate_id = c.id
-        
         LEFT JOIN "user" u
             ON u.id = c.user_id
-        
+    ),
+
+    deduped AS (
+        SELECT *,
+            ROW_NUMBER() OVER (
+                PARTITION BY "candidateId"
+                ORDER BY "matchScore" DESC
+            ) AS rn
+        FROM ranked_candidates
     )
 
-    SELECT DISTINCT ON ("candidateId")
+    SELECT
         "candidateId" AS "id",
         name,
+        education_level,
         education,
         experience,
         skills,
         "matchScore",
         picture
-    FROM ranked_candidates
-    ORDER BY 
-        "candidateId",
-        "matchScore" DESC
-    LIMIT ${limit};`;
+    FROM deduped
+    WHERE rn = 1
+    ORDER BY "matchScore" DESC
+    LIMIT ${limit};
+    `;
 
     return results as Candidate[];
 } 
@@ -254,6 +283,8 @@ async function filterAll(query: string, limit: number) {
         FROM job j
         JOIN employer e ON e.id = j.employer_id
         JOIN company c ON c.id = e.company_id
+        ORDER BY j.id
+        LIMIT 1
     ),
 
     ranked_candidates AS (
@@ -329,7 +360,7 @@ async function filterAll(query: string, limit: number) {
         
     )
 
-    SELECT
+    SELECT DISTINCT
         "candidateId" AS "id",
         name,
         education,
@@ -337,18 +368,8 @@ async function filterAll(query: string, limit: number) {
         skills,
         "matchScore",
         "picture"
-    FROM 
-    (
-        SELECT
-            *,
-            ROW_NUMBER() OVER (
-                PARTITION BY "jobId"
-                ORDER BY "matchScore" DESC
-            ) AS rn
-        FROM ranked_candidates
-    ) t
-    WHERE rn <= ${limit}
-    ORDER BY "jobId", "matchScore" DESC
+    FROM ranked_candidates
+    ORDER BY "matchScore" DESC
     LIMIT ${limit};`;   
 
     return results;

@@ -1,7 +1,5 @@
 "use server"
 
-import MainPageLayout from "@/components/ui/layout/MainPageLayout";
-import RecommendedSeekersList from "@/components/ui/cards/RecommendedSeekersList";
 import { getEmployer, getUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { filterInitial } from "./actions";

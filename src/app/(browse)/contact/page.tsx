@@ -1,6 +1,8 @@
+"use server"
+
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 
-export default function ContactPage() {
+export default async function ContactPage() {
   return (
     <MainPageLayout
       title="Contact Us"
@@ -18,9 +20,7 @@ export default function ContactPage() {
 
           <p className="mt-3 max-w-3xl leading-7 text-slate-600">
             Contact us for help with your account, job postings, candidate
-            recommendations, membership, or general platform questions. This
-            page is frontend-only for now and can later be connected to backend
-            email/support functionality.
+            recommendations, membership, or general platform questions.
           </p>
         </div>
 
@@ -38,6 +38,7 @@ export default function ContactPage() {
                   </label>
 
                   <input
+                    name="name"
                     placeholder="Enter your name"
                     className="mt-2 h-12 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                   />
@@ -50,6 +51,7 @@ export default function ContactPage() {
 
                   <input
                     type="email"
+                    name="email"
                     placeholder="your.email@example.com"
                     className="mt-2 h-12 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                   />
@@ -61,13 +63,17 @@ export default function ContactPage() {
                   Enquiry Type
                 </label>
 
-                <select className="mt-2 h-12 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                <select 
+                  name="enquiry_type"
+                  defaultValue="ACCOUNT"
+                  className="mt-2 h-12 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                >
                   <option>Select enquiry type</option>
-                  <option>Account help</option>
-                  <option>Job posting help</option>
-                  <option>Candidate recommendations</option>
-                  <option>Membership or billing</option>
-                  <option>General question</option>
+                  <option value="ACCOUNT" >Account help</option>
+                  <option value="JOB_POSTING" >Job posting help</option>
+                  <option value="CANDIDATE_RECOMMENDATIONS" >Candidate recommendations</option>
+                  <option value="BILLING" >Membership or billing</option>
+                  <option value="GENERAL" >General question</option>
                 </select>
               </div>
 
@@ -82,9 +88,11 @@ export default function ContactPage() {
                 />
               </div>
 
-              <button className="rounded-2xl bg-blue-600 px-8 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700">
-                Send Message
-              </button>
+              <input 
+                type="submit"
+                value="Send Message"
+                className="rounded-2xl bg-blue-600 px-8 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700"
+              />
             </div>
           </form>
 

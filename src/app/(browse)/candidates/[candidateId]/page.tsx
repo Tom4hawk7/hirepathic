@@ -66,7 +66,7 @@ export default async function CandidateDetailPage({params}: CandidateDetailPageP
 
   return (
     <MainPageLayout
-      title="Candidate blurb"
+      title="Candidate"
       searchPlaceholder="Search candidates..."
       searchValue="Product engineer"
     >

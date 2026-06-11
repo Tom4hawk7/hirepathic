@@ -5,6 +5,7 @@ type JobResultCardProps = {
     title: string;
     company: string;
     location: string;
+    picture?: string;
     workMode: string;
     requiredSkills: string[];
     matchScore: number;
@@ -17,16 +18,15 @@ type JobResultCardProps = {
     location,
     workMode,
     requiredSkills,
+    picture,
     matchScore,
   }: JobResultCardProps) {
     return (
       <article className="flex gap-5">
-        <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-3xl border border-slate-300 bg-indigo-50 text-center text-sm font-semibold text-slate-700 shadow-sm">
-          company
-          <br />
-          logo
-        </div>
-  
+        <img
+        src={picture}
+        className="flex h-28 w-28 shrink-0 items-center justify-center rounded-3xl border border-slate-300 bg-indigo-50 text-center text-sm font-semibold text-slate-700 shadow-sm"
+        />
         <a
           href={`/jobs/${jobId}`}
           className="flex flex-1 items-center justify-between rounded-3xl border border-slate-300 bg-white px-8 py-5 shadow-sm transition hover:border-indigo-300 hover:shadow-md"

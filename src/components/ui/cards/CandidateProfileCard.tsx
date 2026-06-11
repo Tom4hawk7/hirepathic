@@ -85,8 +85,6 @@ type CandidateProfileCardProps = {
               <p className="mt-2 leading-7 text-slate-600">
                 This candidate has been recommended based on their education,
                 experience, skills, and match score for the selected job posting.
-                Backend integration can later replace this mock profile with live
-                candidate data.
               </p>
             </div>
           </div>

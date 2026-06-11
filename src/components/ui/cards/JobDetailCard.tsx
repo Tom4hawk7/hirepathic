@@ -123,7 +123,7 @@ type JobDetailCardProps = {
             <div className="pt-2 text-center">
               <button
                 onClick={() => applyJob(jobId as number, candidateId as number)}
-                className="inline-block rounded-2xl bg-indigo-600 px-10 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                className="inline-block rounded-2xl bg-indigo-600 px-10 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-indigo-700 cursor-pointer"
               >
                 Apply / Save Job
               </button>

@@ -2,9 +2,7 @@
 
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import RecommendedJobsList from "@/components/ui/cards/RecommendedJobsList";
-import { getUser } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { searchJobs, searchJobsForm } from "./actions";
+import { searchJobsForm } from "./actions";
 import { useState, useTransition } from "react";
 
 interface JobsProps {
@@ -29,7 +27,7 @@ export default function Jobs({ initialJobs, hasMembership }: JobsProps) {
 
   return (
     <MainPageLayout
-      title="Search results - for seeker looking for companies"
+      title="Search results - Seeker looking for Jobs"
       searchPlaceholder="Search job descriptions..."
       searchValue="Product engineer"
       action={onSubmit}

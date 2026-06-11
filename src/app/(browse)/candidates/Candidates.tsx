@@ -12,7 +12,6 @@ interface EmployeeSeekerPageProps {
 
 export default function CandidatesList({ hasMembership, profiles}: EmployeeSeekerPageProps) {
     const [candidates, setCandidates] = useState(profiles);
-
     const [isPending, startTransition] = useTransition();
     const limit = hasMembership ? 100 : 10
 
@@ -29,7 +28,7 @@ export default function CandidatesList({ hasMembership, profiles}: EmployeeSeeke
 
   return (
     <MainPageLayout
-      title="Search results - for employer looking for seekers"
+      title="Search results - Employer looking for candidates"
       searchPlaceholder="Search candidates..."
       searchValue=""
       action={onSubmit}

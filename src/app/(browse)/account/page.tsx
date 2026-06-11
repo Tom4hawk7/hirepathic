@@ -1,11 +1,37 @@
 "use server"
 
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
-import { getCandidate, getUser } from "@/lib/auth";
+import { getCandidate, getEmployer, getUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { capitalize } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 export default async function AccountPage() {
   const user = await getUser();
-  const candidate = await getCandidate();
+  if (!user) redirect("/login");
+
+  let employer;
+  let candidate;
+
+  if (user.role == "SEEKER") {
+    candidate = await getCandidate();
+  } else {
+    employer = await prisma.employer.findFirst({
+      where: { user_id: user.id },
+      select: {
+        company: {
+          select: {
+            name: true,
+            description: true,
+            website: true,
+            industry: true,
+            location: true
+          }
+        }
+      }
+    })
+  }
+  
 
   // just a test for how it would work
 
@@ -44,11 +70,7 @@ export default async function AccountPage() {
             className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-slate-300 bg-slate-100 text-sm font-semibold text-slate-600"/>
 
 
-            <h3 className="mt-5 text-2xl font-bold text-slate-950">
-              {candidate?.full_name}
-            </h3>
-
-            <p className="mt-1 text-slate-600">Candidate</p>
+            <p className="mt-1 text-slate-600">{capitalize(user?.role || "")}</p>
             {/* <p className="mt-1 text-slate-600">{candidate}</p> */}
 
             <div className="mt-5 rounded-2xl bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700">
@@ -69,36 +91,31 @@ export default async function AccountPage() {
             </h3>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <InfoBox label="Full Name" value={candidate?.full_name || ""} />
-              <InfoBox label="Email Address" value={candidate?.email || ""} />
-              <InfoBox label="Account Type" value={user?.role || ""} />
-              <InfoBox label="Membership" value={user?.subscription || ""} />
-              {/* <InfoBox label="Education" value={candidate.education} /> */}
-              <InfoBox label="Experience" value={`${String(candidate?.years_of_experience)} Years`} />
-              <InfoBox label="Preferred Work Mode" value={candidate?.preferred_work_mode || ""}
-              />
-              <InfoBox label="Location" value={candidate?.preferred_location || ""} />
-            </div>
+              { candidate 
+                ? <InfoBox label="Full Name" value={candidate?.full_name || ""} />
+                : <InfoBox label="Company" value={employer?.company?.name || "" } />
+              }
+              
+              <InfoBox label="Email Address" value={user?.email || ""} />
+              <InfoBox label="Account Type" value={capitalize(user?.role || "") || ""} />
+              <InfoBox label="Membership" value={capitalize(user?.subscription || "") || ""} />
 
-            {/* <h3 className="text-2xl font-bold text-slate-950">
-              Account Details
-            </h3> */}
-
-            {/* gave a heading above as an example,
-                I would personally show something different depending on the role of the user at hand 
-                I would move the infoboxes into a div down here and show the corresponding information here
-                */}
-            
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <button className="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-700">
-                Edit Profile
-              </button>
-
-              <button className="rounded-2xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50">
-                Change Password
-              </button>
-            </div>
+              { candidate 
+              ? <>
+                  <InfoBox label="Phone" value={candidate.phone || ""} />
+                  <InfoBox label="Experience" value={  `${String(candidate?.years_of_experience)} Years`} />
+                  <InfoBox label="Preferred Work Mode" value={candidate?.preferred_work_mode || ""} />
+                  <InfoBox label="Location" value={candidate?.preferred_location || ""} />
+                </>
+              :
+                <>
+                  <InfoBox label="Website" value={employer?.company?.website || ""} />
+                  <InfoBox label="Description" value={employer?.company?.description || ""} />
+                  <InfoBox label="Industry" value={employer?.company?.industry || ""} />
+                  <InfoBox label="Location" value={employer?.company?.location || ""} />
+                </>
+              }
+            </div>              
           </div>
         </div>
       </section>

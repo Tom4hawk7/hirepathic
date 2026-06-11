@@ -28,7 +28,7 @@ export default async function LoginPage() {
               <div className="pt-8 text-center">
                 <input 
                   type="submit"
-                  className="mx-auto block w-80 rounded-2xl bg-blue-600 px-6 py-3 text-xl font-semibold text-white shadow-sm transition hover:bg-blue-700"
+                  className="mx-auto block w-80 rounded-2xl bg-blue-600 px-6 py-3 text-xl font-semibold text-white shadow-sm transition hover:bg-blue-700 cursor-pointer"
                   value="Login"
                 />
       
