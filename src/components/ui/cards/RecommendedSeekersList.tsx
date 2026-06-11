@@ -1,11 +1,12 @@
 // this page uses mock data for the list as i didnt know how you guys were going to do it 
 import CandidateResultCard from "./CandidateResultCard";
 
-type Candidate = {
+export type Candidate = {
   id: number;
   name: string;
   education: string;
   experience: string;
+  picture?: string;
   skills: string[];
   matchScore: number;
 };
@@ -158,13 +159,14 @@ export default function RecommendedSeekersList({
       )}
 
       <div className="space-y-5">
-        {visibleCandidates.map((candidate) => (
+        {visibleCandidates.map((candidate, index) => (
           <CandidateResultCard
-            key={candidate.id}
+            key={`${candidate.id}${index}`}
             candidateId={candidate.id}
             name={candidate.name}
             education={candidate.education}
             experience={candidate.experience}
+            picture={candidate.picture}
             skills={candidate.skills}
             matchScore={candidate.matchScore}
           />

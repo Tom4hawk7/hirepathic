@@ -1,21 +1,25 @@
+"use server"
+
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import RecommendedSeekersList from "@/components/ui/cards/RecommendedSeekersList";
+import { getEmployer, getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { filterInitial } from "./actions";
+import CandidatesList from "./Candidates";
 
-export default function EmployerRecommendedSeekersPage() {
-  const employerHasMembership = false;
+export default async function EmployerRecommendedSeekersPage() {
+  const user = await getUser();
+  if (!user) redirect("/login");
+
+  const employer = await getEmployer();
+  if (!employer) redirect("/home")
+  
+  const employerHasMembership = user.subscription == "PREMIUM";
+  const limit = employerHasMembership ? 100 : 10;
+
+  const initialData = await filterInitial(limit);
 
   return (
-    <MainPageLayout
-      title="Search results - for employer looking for seekers"
-      searchPlaceholder="Search candidates..."
-      searchValue="Product engineer"
-    >
-      <RecommendedSeekersList
-        isMember={employerHasMembership}
-        resultLimit={10}
-        searchTerm="Product engineer"
-        filterLabel="Filter"
-      />
-    </MainPageLayout>
+    <CandidatesList hasMembership={employerHasMembership} profiles={initialData} />
   );
 }

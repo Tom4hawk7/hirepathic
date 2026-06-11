@@ -1,5 +1,11 @@
+"use server"
+
 import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import CandidateProfileCard from "@/components/ui/cards/CandidateProfileCard";
+import { getUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { getCandidateInfo } from "./actions";
+import { capitalize } from "@/lib/utils";
 
 type CandidateDetailPageProps = {
   params: Promise<{
@@ -46,14 +52,17 @@ const mockCandidates = [
   },
 ];
 
-export default async function CandidateDetailPage({
-  params,
-}: CandidateDetailPageProps) {
+export default async function CandidateDetailPage({params}: CandidateDetailPageProps) {
   const { candidateId } = await params;
 
-  const candidate =
-    mockCandidates.find((person) => person.id === candidateId) ??
-    mockCandidates[0];
+  const user = await getUser();
+  if (!user) redirect("/login");
+
+  const candidate = await getCandidateInfo(Number(candidateId));
+  if (!candidate) redirect("/candidates");
+
+  const education = capitalize(candidate?.education[0].education_level as string) + ` | ${candidate?.education[0].degree}`
+  const skills = candidate?.skills.map((item) => item.skills.name) as string[];
 
   return (
     <MainPageLayout
@@ -62,14 +71,14 @@ export default async function CandidateDetailPage({
       searchValue="Product engineer"
     >
       <CandidateProfileCard
-        name={candidate.name}
-        education={candidate.education}
-        experience={candidate.experience}
-        skills={candidate.skills}
-        personalityBlurb={candidate.personalityBlurb}
-        contactEmail={candidate.contactEmail}
-        phone={candidate.phone}
-        matchScore={candidate.matchScore}
+        name={candidate.full_name || ""}
+        education={education || ""}
+        experience={String(candidate.years_of_experience) || "0"}
+        skills={skills}
+        picture={candidate.user.picture || ""}
+        personalityBlurb={candidate.work_experience[0].description || ""}
+        contactEmail={candidate.email || ""}
+        phone={candidate.phone || ""}
       />
     </MainPageLayout>
   );

@@ -14,7 +14,6 @@ type MainPageLayoutProps = {
 export default function MainPageLayout({
   title,
   searchPlaceholder = "Search...",
-  searchValue = "",
   children,
   action
 }: MainPageLayoutProps) {
@@ -36,7 +35,7 @@ export default function MainPageLayout({
           <div className="flex flex-1 items-center rounded-2xl border border-slate-300 bg-white px-5 shadow-sm">
             <input
               name="search"
-              defaultValue={searchValue}
+              defaultValue=""
               className="h-12 w-full bg-transparent text-base text-slate-800 outline-none placeholder:text-slate-400"
               placeholder={searchPlaceholder}
             />

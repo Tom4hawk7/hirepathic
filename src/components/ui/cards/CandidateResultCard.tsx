@@ -3,6 +3,7 @@ type CandidateResultCardProps = {
     name: string;
     education: string;
     experience: string;
+    picture?: string;
     skills: string[];
     matchScore: number;
   };
@@ -14,14 +15,24 @@ type CandidateResultCardProps = {
     experience,
     skills,
     matchScore,
+    picture
   }: CandidateResultCardProps) {
+
     return (
       <article className="flex gap-5">
-        <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-3xl border border-slate-300 bg-blue-50 text-center text-sm font-semibold text-slate-700 shadow-sm">
-          candidate
-          <br />
-          photo
-        </div>
+        {
+          picture ? 
+          <img 
+          src={picture}
+          className="flex h-28 w-28 shrink-0 items-center justify-center rounded-3xl border border-slate-300 bg-blue-50 text-center text-sm font-semibold text-slate-700 shadow-sm"/>
+          :
+          <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-3xl border border-slate-300 bg-blue-50 text-center text-sm font-semibold text-slate-700 shadow-sm">
+            candidate
+            <br />
+            photo
+          </div> 
+
+        }
   
         <a
           href={`/candidates/${candidateId}`}
