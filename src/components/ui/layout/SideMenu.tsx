@@ -1,7 +1,9 @@
+import { logout } from "@/lib/auth";
 import Link from "next/link";
 
 type SideMenuProps = {
   onClose: () => void;
+  picture?: string;
   accountHref?: string;
   applicationsHref?: string;
   settingsHref?: string;
@@ -11,6 +13,7 @@ type SideMenuProps = {
 
 export default function SideMenu({
   onClose,
+  picture,
   accountHref = "/account",
   applicationsHref = "/applications",
   settingsHref = "/settings",
@@ -27,7 +30,10 @@ export default function SideMenu({
 
       <aside className="fixed right-0 top-0 z-40 flex min-h-screen w-80 flex-col border-l border-slate-200 bg-white/95 px-5 py-6 shadow-2xl backdrop-blur">
         <div className="mb-8 flex items-center justify-between">
-          <div className="h-12 w-12 rounded-full border border-slate-300 bg-slate-100" />
+          <img 
+            src={picture || undefined}
+            className="h-12 w-12 rounded-full border border-slate-300 bg-slate-100" 
+          />
 
           <button
             onClick={onClose}
@@ -89,13 +95,12 @@ export default function SideMenu({
         </nav>
 
         <div className="mt-8 space-y-4 border-t border-slate-200 pt-5">
-          <Link
-            href="/logout"
-            onClick={onClose}
-            className="block rounded-2xl bg-red-600 px-5 py-4 text-center font-semibold text-white shadow-sm transition hover:bg-red-700"
+          <button
+            onClick={logout}
+            className="w-full block rounded-2xl bg-red-600 px-5 py-4 text-center font-semibold text-white shadow-sm transition hover:bg-red-700"
           >
             Logout
-          </Link>
+          </button>
 
           <button
             onClick={onClose}

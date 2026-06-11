@@ -6,6 +6,7 @@ import { Role, } from "@/types/user";
 import { env } from "@/config/env";
 import { prisma } from "./prisma";
 import { candidate, employer, user } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 type SessionPayload = {
     userId: number;
@@ -48,6 +49,8 @@ export async function verifySession(): Promise<SessionPayload | null> {
 export async function logout() {
     const cookieStore = await cookies();
     cookieStore.delete("session");
+
+    redirect("/login")
 }
 
 
