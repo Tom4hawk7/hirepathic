@@ -65,11 +65,6 @@ export default async function CandidateDetailPage({params}: CandidateDetailPageP
   const skills = candidate?.skills.map((item) => item.skills.name) as string[];
 
   return (
-    <MainPageLayout
-      title="Candidate"
-      searchPlaceholder="Search candidates..."
-      searchValue="Product engineer"
-    >
       <CandidateProfileCard
         name={candidate.full_name || ""}
         education={`${education} | ${candidate?.education[0].degree}` || ""}
@@ -80,6 +75,5 @@ export default async function CandidateDetailPage({params}: CandidateDetailPageP
         contactEmail={candidate.email || ""}
         phone={candidate.phone || ""}
       />
-    </MainPageLayout>
   );
 }

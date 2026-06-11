@@ -1,6 +1,5 @@
 "use server"
 
-import MainPageLayout from "@/components/ui/layout/MainPageLayout";
 import JobDetailCard from "@/components/ui/cards/JobDetailCard";
 import { getJobPageInfo } from "./actions";
 import { capitalize, convertEduLevel } from "@/lib/utils";

@@ -1,7 +1,6 @@
 "use client"
 
 import { applyJob } from "@/app/(browse)/jobs/[jobId]/actions";
-import { MouseEventHandler } from "react";
 
 type JobDetailCardProps = {
     jobId: number | null;

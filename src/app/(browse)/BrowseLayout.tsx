@@ -33,6 +33,9 @@ export default function ClientBrowseLayout({ children, user }: BrowseLayoutProps
   const pathname = usePathname();
 
   let title = titleMap[pathname] ?? "Home";
+  title = pathname.startsWith("/jobs") ? "Job" : "";
+  title = pathname.startsWith("/candidates") ? "Candidate" : "";
+
   let extended = pathname == "/jobs" || pathname == "/candidates";
 
   return (
