@@ -188,7 +188,7 @@ async function EmployerHomeContent() {
     <>
       <div className="grid gap-6 md:grid-cols-3">
         <a
-          href="/register/employer/jobpost"
+          href="/jobs/create"
           className="rounded-3xl border border-indigo-200 bg-white p-6 shadow-sm transition hover:border-indigo-400 hover:shadow-md"
         >
           <p className="text-sm font-semibold uppercase tracking-wide text-indigo-700">
