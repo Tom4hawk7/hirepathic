@@ -97,7 +97,7 @@ export default function SideMenu({
         <div className="mt-8 space-y-4 border-t border-slate-200 pt-5">
           <button
             onClick={logout}
-            className="w-full block rounded-2xl bg-red-600 px-5 py-4 text-center font-semibold text-white shadow-sm transition hover:bg-red-700"
+            className="w-full block rounded-2xl bg-red-600 px-5 py-4 text-center font-semibold text-white shadow-sm transition hover:bg-red-700 cursor-pointer"
           >
             Logout
           </button>

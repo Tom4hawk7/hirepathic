@@ -1,6 +1,6 @@
 "use server"
 
-import { filter_type } from "@prisma/client"
+import { filter_type, work_mode } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { getRecentExperience, getSkills } from "@/lib/headline";
 import { getCandidate, getUser } from "@/lib/auth";
@@ -16,40 +16,33 @@ const educationRank = {
   PHD: 6
 };
 
-interface FilterForm {
-    search: string,
-    filter_type: filter_type
-}
+// export async function searchJobsForm(formData: FormData) {
+//     const search = formData.get("search") as string;
+//     const location = formData.get("location") as string;
+//     const work_mode = formData.get("work_mode") as work_mode;
 
-export async function searchJobsForm(formData: FormData) {
-    const search = formData.get("search") as string;
-    const filter_type = formData.get("filter_type") as filter_type;
 
-    return await searchJobs(search, filter_type);
+//     return await searchJobs(search, );
 
-}
+// }
 
-export async function searchJobs(search: string, filter: filter_type | "" = ""): Promise<Job[] | undefined> {
+
+// export async function searchCandidates(search: string, location: string, work_mode: work_mode, limit: number): Promise<Candidate[] | undefined>
+
+export async function searchJobs(search: string, location: string, work_mode: work_mode, limit: number): Promise<Job[] | undefined> {
     const user = await getUser();
     if (!user) return;
 
-    const limit = user.subscription == "PREMIUM" ? 100 : 10;
+    const cleanSearch = search.trim();
+    const cleanLocation = location.trim().toLowerCase();
+    const cleanWorkMode = work_mode || null;
 
-    switch (filter) {
-        case "ALL":
-            return await filterAll(search, limit);
-        
-        case "EDUCATION":
-            return await filterEducation(search, limit);
-        
-        case "SKILL":
-            return await filterSkill(search, limit);
-        
-        case "LOCATION":
-            return await filterLocation(search, limit);
-        
-        default:
-            return await filterInitial(limit)
+    if (!cleanSearch && !cleanLocation && !cleanWorkMode) {
+        console.log("Initial Filter")
+        return await filterInitial(limit);
+    } else {
+        console.log("Filter All")
+        return await filterAll(cleanSearch, cleanLocation, cleanWorkMode, limit);
     }
 }
 
@@ -142,8 +135,21 @@ export async function filterInitial(limit: number): Promise<Job[] | undefined> {
 } 
 
 
-async function filterAll(query: string, limit: number): Promise<Job[] | undefined> {
-    console.log("Query: ", query);
+async function filterAll(search: string, location: string, work_mode: work_mode, limit: number): Promise<Job[] | undefined> {
+    const hasSearch = search !== ''
+    const hasLocation = location !== ''
+    const hasWorkMode = !!work_mode
+
+    let weightSearch = hasSearch ? 0.6 : 0
+    let weightLocation = hasLocation ? 0.2 : 0
+    let weightWorkMode = hasWorkMode ? 0.2 : 0
+
+    const total = weightSearch + weightLocation + weightWorkMode;
+    weightSearch /= total
+    weightLocation /= total 
+    weightWorkMode /= total 
+
+
 
     const results = await prisma.$queryRaw`
         SELECT 
@@ -159,14 +165,37 @@ async function filterAll(query: string, limit: number): Promise<Job[] | undefine
                 ARRAY[]::text[]
             ) AS "requiredSkills",
 
+            LEAST (
             ROUND (
             (
-                (
-                    similarity(COALESCE(job.title, ''), ${query}) * 3 +
-                    similarity(COALESCE(job.description, ''), ${query}) * 2 +
-                    similarity(COALESCE(job.location, ''), ${query}) 
-                ) / 6.0
-            ) * 100 ) AS "matchScore"
+                CASE
+                    WHEN ${search} = '' THEN 0
+                    ELSE (
+                        GREATEST(
+                            LEAST(similarity(COALESCE(job.title, ''), ${search}) * 1.5, 1),
+                            LEAST(similarity(COALESCE(job.description, ''), ${search}) * 1.5, 1)
+                        ) * ${weightSearch}::float
+                    )
+                END
+
+                +
+
+                CASE
+                    WHEN ${location} = '' THEN 0
+                    ELSE LEAST(similarity(COALESCE(job.location, ''), ${location}) * 1.5, 1) * ${weightLocation}::float
+                END
+
+                +
+
+                CASE
+                    WHEN ${work_mode} = '' THEN 0
+                    WHEN job.work_mode = ${work_mode}::work_mode
+                    THEN ${weightWorkMode}::float
+                    ELSE 0
+                END
+                
+
+            ) * 120 ), 100 ) AS "matchScore"
 
         FROM job
         JOIN employer ON job.employer_id = employer.id
@@ -181,7 +210,7 @@ async function filterAll(query: string, limit: number): Promise<Job[] | undefine
             AND job.location IS NOT NULL
             AND job.work_mode IS NOT NULL
             AND "picture" IS NOT NULL
-            
+
         GROUP BY job.id, company.name, picture
         ORDER BY "matchScore" DESC
         LIMIT ${limit};
@@ -189,20 +218,4 @@ async function filterAll(query: string, limit: number): Promise<Job[] | undefine
 
     console.log("Filtered: ", results)
     return results as Promise<Job[] | undefined> ;
-
-
-}
-
-async function filterSkill(query: string, limit: number): Promise<Job[] | undefined> {
-    return undefined;
-
-}
-
-async function filterEducation(query: string, limit: number): Promise<Job[] | undefined> {
-    return undefined;
-}
-
-async function filterLocation(query: string, limit: number): Promise<Job[] | undefined> {
-    return undefined;
-
 }

@@ -5,17 +5,15 @@ import { redirect } from "next/navigation";
 import { filterInitial, searchCandidates } from "./actions";
 import { filter_type } from "@prisma/client";
 import RecommendedSeekersList from "@/components/ui/cards/RecommendedSeekersList";
+import { FilterForm } from "../actions";
 
 interface CandidatePageProps {
-  searchParams: Promise<{
-    search?: string;
-    filter_type?: filter_type;
-  }>
+  searchParams: Promise<FilterForm>
 }
 
 
 export default async function EmployerRecommendedSeekersPage({ searchParams }: CandidatePageProps ) {
-  const { search, filter_type } = await searchParams;
+  const { search, location, work_mode } = await searchParams;
 
   const user = await getUser();
   if (!user) redirect("/login");
@@ -24,7 +22,7 @@ export default async function EmployerRecommendedSeekersPage({ searchParams }: C
   if (!employer) redirect("/home")
   
   const limit = user.subscription == "PREMIUM" ? 100 : 10;
-  const candidates = await searchCandidates(search || "", filter_type || "")
+  const candidates = await searchCandidates(search || "", location || "", work_mode, limit);
 
   return (
     <section className="space-y-6">
@@ -35,11 +33,11 @@ export default async function EmployerRecommendedSeekersPage({ searchParams }: C
             </p>
 
             <h2 className="mt-2 text-2xl font-bold text-slate-950">
-              Browse available jobs
+              Create a Job
             </h2>
 
             <p className="mt-1 text-sm text-slate-600">
-              Search job listings and find roles that match your profile.
+              Create a job listing and find candidates that suit it.
             </p>
           </div>
 
