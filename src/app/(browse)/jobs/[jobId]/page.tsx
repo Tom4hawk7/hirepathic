@@ -2,7 +2,7 @@
 
 import JobDetailCard from "@/components/ui/cards/JobDetailCard";
 import { getJobPageInfo } from "./actions";
-import { capitalize, convertEduLevel } from "@/lib/utils";
+import { capitalize, convertEduLevel, convertWorkMode } from "@/lib/utils";
 import { getCandidate } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -46,7 +46,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         requiredEducation={convertEduLevel(job?.required_education_level || "HIGH_SCHOOL")}
         requiredSkills={skills || []}
         experience={`${job?.years_of_experience} Years` || ""}
-        workMode={capitalize(job?.work_mode || "REMOTE")}
+        workMode={convertWorkMode(job?.work_mode || "REMOTE")}
         location={job?.location || ""}
       />
   );

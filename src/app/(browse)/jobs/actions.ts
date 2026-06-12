@@ -156,7 +156,7 @@ async function filterAll(search: string, location: string, work_mode: work_mode,
             job.id AS id,
             job.title AS title,
             job.location AS location,
-            job.work_mode AS workMode,
+            job.work_mode AS "workMode",
             u.picture AS "picture",
             company.name AS company,
 
